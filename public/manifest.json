@@ -1,0 +1,12 @@
+{
+	"$schema": "https://json.schemastore.org/web-manifest-combined.json",
+	"name": "Lunch Calculator",
+	"short_name": "Lunch Calculator",
+	"start_url": ".",
+	"display": "standalone",
+	"background_color": "#fff",
+	"theme_color": "#00947e",
+	"description": "App to help figure out splits for lunch (or other) orders.",
+	"icons": [],
+	"related_applications": []
+}

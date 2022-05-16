@@ -1,0 +1,33 @@
+@import "https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css";
+@import "https://cdn.jsdelivr.net/npm/@creativebulma/bulma-tooltip@1.2.0/dist/bulma-tooltip.min.css";
+
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;700&display=swap");
+
+html {
+	min-height: 100%;
+}
+
+body {
+	font-family: "Source Sans Pro", sans-serif;
+}
+
+.toolbar button:disabled {
+	border: none;
+}
+
+@media (min-width: 460px) {
+	.toolbar .control:before {
+		display: none;
+	}
+}
+
+@media (max-width: 460px) {
+	.toolbar .button > .icon {
+		margin-left: auto !important;
+		margin-right: 0 !important;
+	}
+
+	.toolbar .button > .text {
+		display: none;
+	}
+}
