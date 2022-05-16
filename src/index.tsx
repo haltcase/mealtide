@@ -5,13 +5,18 @@ import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 
 import App from "./App";
 
+window.history.scrollRestoration = "manual";
+
 const rootElement = document.getElementById("root");
-const root = createRoot(rootElement!);
 
-root.render(
-	<StrictMode>
-		<App />
-	</StrictMode>
-);
+if (rootElement != null) {
+	const root = createRoot(rootElement);
 
-serviceWorkerRegistration.register();
+	root.render(
+		<StrictMode>
+			<App />
+		</StrictMode>
+	);
+
+	serviceWorkerRegistration.register();
+}

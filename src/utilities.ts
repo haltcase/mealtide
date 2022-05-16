@@ -15,7 +15,7 @@ export const tax = 0.07525;
 export const getTax = (amount: number): number => amount * tax;
 
 // https://github.com/sindresorhus/is-plain-obj
-export const isPlainObject = (value: any): boolean => {
+export const isPlainObject = (value: unknown): boolean => {
 	if (Object.prototype.toString.call(value) !== "[object Object]") {
 		return false;
 	}
@@ -43,7 +43,7 @@ export const isEmptyTree = (object: object | null | undefined): boolean => {
 
 	for (let i = 0; i < keyCount; i++) {
 		const key = keys[i];
-		// @ts-ignore
+		// @ts-expect-error - we don't need to care about this
 		const value = object[key];
 
 		if (!isPlainObject(value) || !isEmptyTree(value)) {

@@ -19,7 +19,7 @@ clientsClaim();
 // Their URLs are injected into the manifest variable below.
 // This variable must be present somewhere in your service worker file,
 // even if you decide not to use precaching. See https://cra.link/PWA
-// @ts-ignore
+// @ts-expect-error - we don't need to care about this error
 precacheAndRoute(self.__WB_MANIFEST);
 
 // Set up App Shell-style routing, so that all navigation requests
@@ -67,7 +67,7 @@ registerRoute(
 // registration.waiting.postMessage({type: 'SKIP_WAITING'})
 self.addEventListener("message", event => {
 	if (event.data && event.data.type === "SKIP_WAITING") {
-		// @ts-ignore
+		// @ts-expect-error - we don't need to care about this error
 		self.skipWaiting();
 	}
 });

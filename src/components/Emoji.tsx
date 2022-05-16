@@ -6,7 +6,7 @@ interface EmojiProps {
 	className?: string;
 }
 
-export const Emoji: React.FunctionComponent<EmojiProps> = props => (
+export const Emoji = (props: EmojiProps): JSX.Element => (
 	<span
 		className={props.className ?? ""}
 		role="img"

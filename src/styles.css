@@ -11,6 +11,10 @@ body {
 	font-family: "Source Sans Pro", sans-serif;
 }
 
+.navbar {
+	display: block;
+}
+
 .toolbar button:disabled {
 	border: none;
 }

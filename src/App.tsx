@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import type { MutableRefObject, SyntheticEvent } from "react";
 
 import {
 	IconArrowBackUp,
@@ -50,7 +51,7 @@ const showToast = (message: string, type: ToastType = "is-success"): void =>
 		type,
 		message,
 		position: "top-right",
-		// @ts-ignore - bulma-toast's definitions are missing these offset properties
+		// @ts-expect-error - bulma-toast's definitions are missing these offset properties
 		offsetTop: "50px",
 		offsetRight: "10px"
 	});
@@ -72,7 +73,7 @@ const getStateFromUrl = (): SerializableState | null => {
 
 const saveStateToUrl = (
 	data: SerializableState,
-	isInternalRef: React.MutableRefObject<boolean>
+	isInternalRef: MutableRefObject<boolean>
 ): void => {
 	console.log("saveStateToUrl", data, isInternalRef.current);
 	// prevent history changes if this is an internal event
@@ -197,7 +198,7 @@ const App = () => {
 		}));
 	};
 
-	const submitPerson = (event?: React.SyntheticEvent): void => {
+	const submitPerson = (_event?: SyntheticEvent): void => {
 		if (!isPersonValid) {
 			return;
 		}
@@ -208,7 +209,7 @@ const App = () => {
 		personNameInput.current?.focus();
 	};
 
-	const submitCharge = (event?: React.SyntheticEvent): void => {
+	const submitCharge = (_event?: SyntheticEvent): void => {
 		if (!isChargeValid) {
 			return;
 		}
@@ -242,14 +243,14 @@ const App = () => {
 
 	return (
 		<div>
-			<nav className="navbar has-background-primary-dark has-text-white-ter">
+			<nav className="navbar is-fixed-top has-background-primary-dark has-text-white-ter">
 				<div className="navbar-brand">
 					<Emoji
 						text="🍔"
 						label="burger"
 						className="is-size-4 is-unselectable ml-5 mt-2"
 					/>
-					<span className="is-size-3 ml-2 has-text-weight-light">
+					<span className="is-size-3 ml-2 is-unselectable has-text-weight-light">
 						lunch calculator
 					</span>
 				</div>
@@ -257,54 +258,54 @@ const App = () => {
 					<div className="navbar-start"></div>
 					<div className="navbar-end"></div>
 				</div>
+
+				<div className="toolbar field has-addons is-justify-content-center has-background-primary-light mb-0">
+					<p className="control has-tooltip-bottom" data-tooltip="Undo">
+						<button
+							className="button is-normal is-primary is-light is-borderless"
+							onClick={goBack}>
+							<span className="icon">
+								<IconArrowBackUp size={12} />
+							</span>
+							<span className="text">Undo</span>
+						</button>
+					</p>
+					<p className="control has-tooltip-bottom" data-tooltip="Redo">
+						<button
+							className="button is-normal is-primary is-light"
+							onClick={goForward}>
+							<span className="icon">
+								<IconArrowForwardUp size={12} />
+							</span>
+							<span className="text">Redo</span>
+						</button>
+					</p>
+					<p className="control has-tooltip-bottom" data-tooltip="Reset">
+						<button
+							className="button is-normal is-primary is-light"
+							onClick={reset}>
+							<span className="icon">
+								<IconClearAll size={12} />
+							</span>
+							<span className="text">Reset</span>
+						</button>
+					</p>
+					<p
+						className="control has-tooltip-bottom"
+						data-tooltip="Copy shareable link">
+						<button
+							className="button is-normal is-primary is-light"
+							onClick={copyUrl}>
+							<span className="icon">
+								<IconLink size={12} />
+							</span>
+							<span className="text">Copy shareable link</span>
+						</button>
+					</p>
+				</div>
 			</nav>
 
-			<div className="toolbar field has-addons is-justify-content-center has-background-primary-light mb-0">
-				<p className="control has-tooltip-bottom" data-tooltip="Undo">
-					<button
-						className="button is-normal is-primary is-light is-borderless"
-						onClick={goBack}>
-						<span className="icon">
-							<IconArrowBackUp size={12} />
-						</span>
-						<span className="text">Undo</span>
-					</button>
-				</p>
-				<p className="control has-tooltip-bottom" data-tooltip="Redo">
-					<button
-						className="button is-normal is-primary is-light"
-						onClick={goForward}>
-						<span className="icon">
-							<IconArrowForwardUp size={12} />
-						</span>
-						<span className="text">Redo</span>
-					</button>
-				</p>
-				<p className="control has-tooltip-bottom" data-tooltip="Reset">
-					<button
-						className="button is-normal is-primary is-light"
-						onClick={reset}>
-						<span className="icon">
-							<IconClearAll size={12} />
-						</span>
-						<span className="text">Reset</span>
-					</button>
-				</p>
-				<p
-					className="control has-tooltip-bottom"
-					data-tooltip="Copy shareable link">
-					<button
-						className="button is-normal is-primary is-light"
-						onClick={copyUrl}>
-						<span className="icon">
-							<IconLink size={12} />
-						</span>
-						<span className="text">Copy shareable link</span>
-					</button>
-				</p>
-			</div>
-
-			<main className="section has-background-white pt-4">
+			<main className="section has-background-white mt-5">
 				<div className="container">
 					<div className="columns">
 						<section className="column">
