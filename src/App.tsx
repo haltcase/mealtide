@@ -4,15 +4,23 @@ import type { MutableRefObject, SyntheticEvent } from "react";
 import {
 	IconArrowBackUp,
 	IconArrowForwardUp,
-	IconClearAll,
+	IconNewSection,
 	IconCurrencyDollar,
 	IconPencil,
 	IconPlus,
 	IconLink,
 	IconTag,
 	IconTrash,
-	IconUser
+	IconUser,
+	IconShare,
+	IconBox,
+	IconCheck,
+	IconX,
+	IconAt,
+	IconNote
 } from "@tabler/icons";
+
+import { Venmo } from "@icons-pack/react-simple-icons";
 
 import { toast, ToastType } from "bulma-toast";
 import { compressToURI, decompressFromURI } from "lz-ts";
@@ -22,29 +30,25 @@ import "./styles.css";
 import { Emoji } from "./components/Emoji";
 import { ItemHeading } from "./components/ItemHeading";
 import { PriceLevel } from "./components/PriceLevel";
+import { ToolbarAction } from "./components/ToolbarAction";
 import { useOnce } from "./hooks/useOnce";
 import { SerializableState } from "./models/SerializableState";
+import { Addon, createAddon } from "./models/Addon";
 import { PartyCharge, createPartyCharge } from "./models/PartyCharge";
 import { Person, createPerson } from "./models/Person";
 import {
 	capitalize,
-	getTax,
 	isEmptyTree,
 	isItemValid,
 	parseFloat,
-	toDoubleString
+	toDoubleString,
+	getPriceBreakdown,
+	getTotalPersonCharges
 } from "./utilities";
 
-import type { ItemRecord } from "./utilities";
+import { getPaymentUrl } from "./venmo";
 
-const getTotalCharges = (items: ItemRecord): number =>
-	Object.values(items).reduce(
-		(previous, current) => previous + parseFloat(current.amount),
-		0
-	);
-
-const getChargeSplit = (data: SerializableState): number =>
-	getTotalCharges(data.charges) / Object.keys(data.people).length;
+const serializationKey = "save";
 
 const showToast = (message: string, type: ToastType = "is-success"): void =>
 	toast({
@@ -60,9 +64,9 @@ const getStateFromUrl = (): SerializableState | null => {
 	console.log("getStateFromUrl");
 	const params = new URLSearchParams(document.location.search);
 
-	if (params.has("save")) {
+	if (params.has(serializationKey)) {
 		try {
-			return JSON.parse(decompressFromURI(params.get("save") ?? ""));
+			return JSON.parse(decompressFromURI(params.get(serializationKey) ?? ""));
 		} catch (error) {
 			showToast("Could not load data from URL", "is-danger");
 		}
@@ -88,7 +92,7 @@ const saveStateToUrl = (
 
 	if (!isEmptyTree(data)) {
 		const params = new URLSearchParams();
-		params.set("save", compressToURI(JSON.stringify(data)));
+		params.set(serializationKey, compressToURI(JSON.stringify(data)));
 		newPath += "?" + params.toString();
 	}
 
@@ -99,10 +103,13 @@ const saveStateToUrl = (
 
 const App = () => {
 	const [dataState, setDataState] = useState<SerializableState>({
+		orderTitle: "",
+		venmoUsername: "",
 		people: {},
 		charges: {}
 	});
 
+	const [hasVenmo, setHasVenmo] = useState(false);
 	const [isEditingPerson, setIsEditingPerson] = useState(false);
 	const [isEditingCharge, setIsEditingCharge] = useState(false);
 	const [isPersonValid, setIsPersonValid] = useState(false);
@@ -110,8 +117,13 @@ const App = () => {
 	const [newCharge, setNewCharge] = useState<PartyCharge>(createPartyCharge());
 	const [newPerson, setNewPerson] = useState<Person>(createPerson());
 
+	// FIXME: use `ReturnType<typeof useState<Item>>` when supported
+	const [addonMap, setAddonEditorMap] = useState<Record<string, Addon>>({});
+
 	const personNameInput = useRef<HTMLInputElement>(null);
+	const personAmountInput = useRef<HTMLInputElement>(null);
 	const chargeNameInput = useRef<HTMLInputElement>(null);
+	const chargeAmountInput = useRef<HTMLInputElement>(null);
 	const isInternalHistoryChange = useRef(false);
 
 	const updateState = (event?: PopStateEvent) => {
@@ -132,6 +144,8 @@ const App = () => {
 		// data is null when going back to initial state (blank slate);
 		// we have to coalesce to empty objects here to commit that blank state
 		setDataState({
+			venmoUsername: data?.venmoUsername ?? "",
+			orderTitle: data?.orderTitle ?? "",
 			people: data?.people ?? {},
 			charges: data?.charges ?? {}
 		});
@@ -163,6 +177,22 @@ const App = () => {
 	useEffect(() => {
 		setIsChargeValid(isItemValid(newCharge));
 	}, [newCharge]);
+
+	useEffect(() => {
+		setHasVenmo(dataState.venmoUsername.length >= 5);
+	}, [dataState.venmoUsername]);
+
+	const setOrderTitle = (orderTitle: string): void =>
+		setDataState(state => ({
+			...state,
+			orderTitle
+		}));
+
+	const setVenmoUsername = (venmoUsername: string): void =>
+		setDataState(state => ({
+			...state,
+			venmoUsername
+		}));
 
 	const addOrUpdateCharge = (charge: PartyCharge): void =>
 		setDataState(state => ({
@@ -198,8 +228,53 @@ const App = () => {
 		}));
 	};
 
+	const removeAddon = (person: Person, addon: Addon): void => {
+		setDataState(state => {
+			const { [addon.name]: existing, ...others } =
+				state.people[person.name].subitems;
+
+			return {
+				...state,
+				people: {
+					...state.people,
+					[person.name]: {
+						...person,
+						subitems: others
+					}
+				}
+			};
+		});
+	};
+
+	const dropAddonEditor = (person: Person): Record<string, Addon> => {
+		const { [person.name]: existing, ...others } = addonMap;
+		return others;
+	};
+
+	const setAddonEditor = (
+		person: Person,
+		addon: ((addon: Addon) => Addon | null) | null
+	) => {
+		if (addon == null) {
+			setAddonEditorMap(dropAddonEditor(person));
+		} else {
+			setAddonEditorMap(state => {
+				const newValue = addon(state[person.name]);
+				if (newValue == null) {
+					return dropAddonEditor(person);
+				} else {
+					return {
+						...state,
+						[person.name]: newValue
+					};
+				}
+			});
+		}
+	};
+
 	const submitPerson = (_event?: SyntheticEvent): void => {
 		if (!isPersonValid) {
+			personAmountInput.current?.focus();
 			return;
 		}
 
@@ -211,6 +286,7 @@ const App = () => {
 
 	const submitCharge = (_event?: SyntheticEvent): void => {
 		if (!isChargeValid) {
+			chargeAmountInput.current?.focus();
 			return;
 		}
 
@@ -218,6 +294,18 @@ const App = () => {
 		setNewCharge(createPartyCharge());
 		setIsEditingCharge(false);
 		chargeNameInput.current?.focus();
+	};
+
+	const submitAddon = (person: Person, addon: Addon): void => {
+		addOrUpdatePerson({
+			...person,
+			subitems: {
+				...person.subitems,
+				[addon.name]: addon
+			}
+		});
+
+		setAddonEditor(person, _ => null);
 	};
 
 	const goBack = (): void => {
@@ -229,7 +317,12 @@ const App = () => {
 	};
 
 	const reset = (): void => {
-		setDataState({ people: {}, charges: {} });
+		setDataState({
+			orderTitle: "",
+			venmoUsername: "",
+			people: {},
+			charges: {}
+		});
 		// isInternalHistoryChange.current = false;
 		// saveStateToUrl(dataState, isInternalHistoryChange);
 	};
@@ -239,6 +332,24 @@ const App = () => {
 			.writeText(document.location.toString())
 			.then(() => showToast("Copied URL to clipboard"))
 			.catch(() => showToast("Could not copy URL to clipboard", "is-danger"));
+	};
+
+	const share = () => {
+		if (!navigator.share) {
+			showToast("Your browser doesn't support sharing content", "is-danger");
+			return;
+		}
+
+		const content = {
+			title: `Lunch Order for ${new Date().toLocaleDateString()}`,
+			text: "See this lunch order to find out your total",
+			url: document.location.toString()
+		};
+
+		navigator
+			.share(content)
+			.then(() => showToast("Shared"))
+			.catch(() => showToast("Failed to share", "is-danger"));
 	};
 
 	return (
@@ -260,117 +371,77 @@ const App = () => {
 				</div>
 
 				<div className="toolbar field has-addons is-justify-content-center has-background-primary-light mb-0">
-					<p className="control has-tooltip-bottom" data-tooltip="Undo">
-						<button
-							className="button is-normal is-primary is-light is-borderless"
-							onClick={goBack}>
-							<span className="icon">
-								<IconArrowBackUp size={12} />
-							</span>
-							<span className="text">Undo</span>
-						</button>
-					</p>
-					<p className="control has-tooltip-bottom" data-tooltip="Redo">
-						<button
-							className="button is-normal is-primary is-light"
-							onClick={goForward}>
-							<span className="icon">
-								<IconArrowForwardUp size={12} />
-							</span>
-							<span className="text">Redo</span>
-						</button>
-					</p>
-					<p className="control has-tooltip-bottom" data-tooltip="Reset">
-						<button
-							className="button is-normal is-primary is-light"
-							onClick={reset}>
-							<span className="icon">
-								<IconClearAll size={12} />
-							</span>
-							<span className="text">Reset</span>
-						</button>
-					</p>
-					<p
-						className="control has-tooltip-bottom"
-						data-tooltip="Copy shareable link">
-						<button
-							className="button is-normal is-primary is-light"
-							onClick={copyUrl}>
-							<span className="icon">
-								<IconLink size={12} />
-							</span>
-							<span className="text">Copy shareable link</span>
-						</button>
-					</p>
+					<ToolbarAction name="New" icon={IconNewSection} onClick={reset} />
+					<ToolbarAction name="Undo" icon={IconArrowBackUp} onClick={goBack} />
+					<ToolbarAction
+						name="Redo"
+						icon={IconArrowForwardUp}
+						onClick={goForward}
+					/>
+					<ToolbarAction name="Copy link" icon={IconLink} onClick={copyUrl} />
+					<ToolbarAction name="Share" icon={IconShare} onClick={share} />
 				</div>
 			</nav>
 
 			<main className="section has-background-white mt-5">
 				<div className="container">
-					<div className="columns">
-						<section className="column">
-							<ItemHeading title="Items" subtitle="i.e., the edible stuff" />
-
+					<div className="columns is-centered">
+						<section className="column is-three-quarters-desktop">
 							<div className="field is-horizontal mt-3">
 								<div className="field-body">
-									<div className="field">
-										<p className="control is-expanded has-icons-left has-icons-right">
+									<div className="field has-addons">
+										<p className="control">
+											<button className="button is-static" tabIndex={-1}>
+												<IconNote size={22} className="" />
+											</button>
+										</p>
+										<p className="control is-expanded">
 											<input
 												className="input"
 												type="text"
-												placeholder="Who ordered this item?"
-												ref={personNameInput}
-												value={newPerson.name}
-												onKeyDown={e => e.key === "Enter" && submitPerson()}
-												onChange={e =>
-													setNewPerson({
-														...newPerson,
-														name: capitalize(e.target.value)
-													})
-												}
+												placeholder="What are we getting?"
+												value={dataState.orderTitle}
+												onChange={e => setOrderTitle(e.target.value)}
 											/>
-
-											<span className="icon is-small is-left">
-												<IconUser size={22} className="" />
-											</span>
 										</p>
 									</div>
-									<div className="field">
-										<p className="control is-expanded has-icons-left">
+									<div className="field has-addons">
+										<p className="control">
+											<button className="button is-static" tabIndex={-1}>
+												<IconAt size={22} className="" />
+											</button>
+										</p>
+										<p className="control is-expanded">
 											<input
 												className="input"
-												type="number"
-												placeholder="Amount"
-												step="0.01"
-												value={newPerson.amount}
-												onKeyDown={e => e.key === "Enter" && submitPerson()}
-												onChange={e =>
-													setNewPerson({
-														...newPerson,
-														amount: parseFloat(e.target.value)
-													})
+												type="text"
+												placeholder="Username"
+												value={dataState.venmoUsername}
+												onKeyDown={e =>
+													e.key === "Enter" && chargeNameInput.current?.focus()
 												}
+												onChange={e => setVenmoUsername(e.target.value)}
 											/>
-											<span className="icon is-small is-left">
-												<IconCurrencyDollar size={22} className="" />
-											</span>
+										</p>
+										<p className="control">
+											<button className="button is-static" tabIndex={-1}>
+												<Venmo size={48} />
+											</button>
 										</p>
 									</div>
 								</div>
 							</div>
-
-							<button
-								className="button is-info"
-								onClick={submitPerson}
-								disabled={!isPersonValid}>
-								<span className="icon">
-									<IconPlus size={18} className="" />
-								</span>
-								<span>{isEditingPerson ? "Update" : "Add"} item</span>
-							</button>
 						</section>
+					</div>
 
-						<section className="column">
+					<div className="columns is-centered mb-0">
+						<section className="column is-three-quarters-desktop">
+							<div className="columns is-centered mb-0">
+								<section className="column is-three-quarters-desktop">
+									<hr className="has-background-grey-lighter" />
+								</section>
+							</div>
+
 							<ItemHeading
 								title="Party Charges"
 								subtitle="e.g., delivery or service fees"
@@ -407,6 +478,7 @@ const App = () => {
 												type="number"
 												placeholder="Amount"
 												step="0.01"
+												ref={chargeAmountInput}
 												value={newCharge.amount}
 												onKeyDown={e => e.key === "Enter" && submitCharge()}
 												onChange={e =>
@@ -421,130 +493,348 @@ const App = () => {
 											</span>
 										</p>
 									</div>
+									<div className="is-info is-fullwidth-mobile">
+										<button
+											className="button is-info is-fullwidth"
+											onClick={submitCharge}
+											disabled={!isChargeValid}>
+											<span className="icon">
+												<IconPlus size={18} className="" />
+											</span>
+											<span>
+												{isEditingCharge ? "Update" : "Add"} party charge
+											</span>
+										</button>
+									</div>
 								</div>
 							</div>
-
-							<button
-								className="button is-info"
-								onClick={submitCharge}
-								disabled={!isChargeValid}>
-								<span className="icon">
-									<IconPlus size={18} className="" />
-								</span>
-								<span>{isEditingCharge ? "Update" : "Add"} party charge</span>
-							</button>
 						</section>
 					</div>
 
-					{Object.keys(dataState.charges).length > 0 && (
-						<div className="field is-grouped is-grouped-multiline my-5">
-							{Object.values(dataState.charges).map((charge, i) => (
-								<div className="control" key={i}>
-									<div className="tags are-medium has-addons">
-										<span
-											className="tag is-info has-tooltip-right"
-											data-tooltip={
-												"This is a party charge that\nis split amongst all orders"
-											}>{`$${toDoubleString(charge.amount)}`}</span>
-										<span className="tag">{charge.name}</span>
-										<span
-											className="tag is-info is-light"
-											data-tooltip="Edit this item"
-											onClick={() => {
-												setNewCharge(charge);
-												setIsEditingCharge(true);
-											}}>
-											<span className="icon is-info is-light">
-												<IconPencil size={18} className="" />
-											</span>
-										</span>
-										<span
-											className="tag is-danger is-light"
-											data-tooltip="Remove this item"
-											onClick={() => removeCharge(charge)}>
-											<span className="icon is-danger is-light">
-												<IconTrash size={18} className="" />
-											</span>
-										</span>
-									</div>
-								</div>
-							))}
-						</div>
-					)}
-
-					{Object.keys(dataState.people).length === 0 ? (
-						<div className="notification is-primary is-light">
-							Enter items to get started
-						</div>
-					) : (
-						<table className="table is-bordered is-striped is-hoverable is-fullwidth">
-							<thead>
-								<tr>
-									<th>Item</th>
-									<th className="has-text-right" title="Price including tax">
-										Total
-									</th>
-								</tr>
-							</thead>
-
-							<tbody>
-								{Object.values(dataState.people).map((person, i) => (
-									<tr key={i}>
-										<td className="is-vcentered">
-											<div className="level">
-												<div className="level-left">{person.name}</div>
-												<div className="level-right">
-													<div className="field has-addons">
-														<p className="control">
-															<button
-																className="button is-small is-danger is-light"
-																data-tooltip="Remove this item"
-																onClick={() => removePerson(person)}>
-																<IconTrash size={18} className="" />
-															</button>
-														</p>
-
-														<p className="control">
-															<button
-																className="button is-small is-info is-light"
-																data-tooltip="Edit this item"
-																onClick={() => {
-																	setNewPerson(person);
-																	setIsEditingPerson(true);
-																}}>
-																<IconPencil size={18} className="" />
-															</button>
-														</p>
-													</div>
+					<div className="columns is-centered mt-0">
+						<section className="column is-three-quarters-desktop">
+							{Object.keys(dataState.charges).length > 0 && (
+								<div className="field is-grouped is-grouped-multiline mt-3">
+									{Object.values(dataState.charges)
+										.reverse()
+										.map((charge, i) => (
+											<div className="control" key={i}>
+												<div className="tags are-medium has-addons">
+													<span
+														className="tag is-info has-tooltip-right"
+														data-tooltip={
+															"This is a party charge that\nis split amongst all orders"
+														}>{`$${toDoubleString(charge.amount)}`}</span>
+													<span className="tag">{charge.name}</span>
+													<span
+														className="tag is-info is-light"
+														data-tooltip="Edit this item"
+														onClick={() => {
+															setNewCharge(charge);
+															setIsEditingCharge(true);
+														}}>
+														<span className="icon is-info is-light">
+															<IconPencil size={18} className="" />
+														</span>
+													</span>
+													<span
+														className="tag is-danger is-light"
+														data-tooltip="Remove this item"
+														onClick={() => removeCharge(charge)}>
+														<span className="icon is-danger is-light">
+															<IconTrash size={18} className="" />
+														</span>
+													</span>
 												</div>
 											</div>
-										</td>
+										))}
+								</div>
+							)}
 
-										<td
-											className="is-vcentered has-text-weight-bold has-text-primary-dark has-text-right has-tooltip-left has-tooltip-text-left"
-											data-tooltip={[
-												`Base amount of $${toDoubleString(person.amount)}`,
-												"Plus:",
-												`\t$${toDoubleString(
-													getTax(parseFloat(person.amount))
-												)} in tax`,
-												`\t$${toDoubleString(
-													getChargeSplit(dataState)
-												)} from fees`
-											].join("\n")}>
-											<PriceLevel
-												price={
-													parseFloat(person.amount) +
-													getTax(parseFloat(person.amount)) +
-													getChargeSplit(dataState)
+							<div className="columns is-centered">
+								<div className="column is-three-quarters-desktop">
+									<hr className="has-background-grey-lighter" />
+								</div>
+							</div>
+
+							<div className="field is-horizontal">
+								<div className="field-body">
+									<div className="field">
+										<p className="control is-expanded has-icons-left has-icons-right">
+											<input
+												className="input"
+												type="text"
+												placeholder="Who ordered this item?"
+												ref={personNameInput}
+												value={newPerson.name}
+												onKeyDown={e => e.key === "Enter" && submitPerson()}
+												onChange={e =>
+													setNewPerson({
+														...newPerson,
+														name: capitalize(e.target.value)
+													})
 												}
 											/>
-										</td>
-									</tr>
-								))}
-							</tbody>
-						</table>
-					)}
+
+											<span className="icon is-small is-left">
+												<IconUser size={22} className="" />
+											</span>
+										</p>
+									</div>
+
+									<div className="field">
+										<p className="control is-expanded has-icons-left">
+											<input
+												className="input"
+												type="number"
+												placeholder="Amount"
+												step="0.01"
+												ref={personAmountInput}
+												value={newPerson.amount}
+												onKeyDown={e => e.key === "Enter" && submitPerson()}
+												onChange={e =>
+													setNewPerson({
+														...newPerson,
+														amount: parseFloat(e.target.value)
+													})
+												}
+											/>
+											<span className="icon is-small is-left">
+												<IconCurrencyDollar size={22} className="" />
+											</span>
+										</p>
+									</div>
+
+									<div className="is-fullwidth-mobile">
+										<button
+											className="button is-info is-fullwidth"
+											onClick={submitPerson}
+											disabled={!isPersonValid}>
+											<span className="icon">
+												<IconPlus size={18} className="" />
+											</span>
+											<span>{isEditingPerson ? "Update" : "Add"} item</span>
+										</button>
+									</div>
+								</div>
+							</div>
+
+							{Object.keys(dataState.people).length === 0 ? (
+								<div className="notification is-primary is-light">
+									Enter items to get started
+								</div>
+							) : (
+								<table className="table is-bordered is-striped is-hoverable is-fullwidth">
+									<thead>
+										<tr>
+											<th>Item</th>
+											<th
+												className="has-text-right"
+												title="Price including tax">
+												Total
+											</th>
+										</tr>
+									</thead>
+
+									<tbody>
+										{Object.values(dataState.people)
+											.reverse()
+											.map((person, i) => (
+												<tr key={i}>
+													<td className="is-vcentered" width="75%">
+														<div className="level">
+															<div className="level-left">{person.name}</div>
+															<div className="level-right">
+																<div className="field has-addons">
+																	<p className="control">
+																		<button
+																			className="button is-small is-primary is-light"
+																			data-tooltip="Add more items"
+																			onClick={() =>
+																				setAddonEditor(person, _ =>
+																					createAddon()
+																				)
+																			}>
+																			<IconPlus size={18} className="" />
+																		</button>
+																	</p>
+
+																	<p className="control">
+																		<button
+																			className="button is-small is-info is-light"
+																			data-tooltip="Edit this item"
+																			onClick={() => {
+																				setNewPerson(person);
+																				setIsEditingPerson(true);
+																			}}>
+																			<IconPencil size={18} className="" />
+																		</button>
+																	</p>
+
+																	<p className="control">
+																		<button
+																			className="button is-small is-danger is-light"
+																			data-tooltip="Remove this item"
+																			onClick={() => removePerson(person)}>
+																			<IconTrash size={18} className="" />
+																		</button>
+																	</p>
+																</div>
+															</div>
+														</div>
+
+														{addonMap[person.name] != null && (
+															<div className="field is-horizontal">
+																<div className="field-body">
+																	<div className="field">
+																		<p className="control is-expanded has-icons-left">
+																			<input
+																				className="input is-small"
+																				type="text"
+																				placeholder="What is it?"
+																				value={addonMap[person.name].name}
+																				onChange={e =>
+																					setAddonEditor(person, current => ({
+																						...current,
+																						name: capitalize(e.target.value)
+																					}))
+																				}
+																			/>
+																			<span className="icon is-small is-left">
+																				<IconBox size={22} className="" />
+																			</span>
+																		</p>
+																	</div>
+																	<div className="field">
+																		<p className="control is-expanded has-icons-left">
+																			<input
+																				className="input is-small"
+																				type="number"
+																				placeholder="Amount"
+																				step="0.01"
+																				value={addonMap[person.name].amount}
+																				onKeyDown={e =>
+																					e.key === "Enter" &&
+																					submitAddon(
+																						person,
+																						addonMap[person.name]
+																					)
+																				}
+																				onChange={e =>
+																					setAddonEditor(person, current => ({
+																						...current,
+																						amount: e.target.value
+																					}))
+																				}
+																			/>
+																			<span className="icon is-small is-left">
+																				<IconCurrencyDollar
+																					size={22}
+																					className=""
+																				/>
+																			</span>
+																		</p>
+																	</div>
+																	<div className="field has-addons is-narrow">
+																		<p className="control">
+																			<button
+																				className="button is-small is-success is-light"
+																				data-tooltip="Add"
+																				onClick={() =>
+																					submitAddon(
+																						person,
+																						addonMap[person.name]
+																					)
+																				}>
+																				<IconCheck size={18} className="" />
+																			</button>
+																		</p>
+
+																		<p className="control">
+																			<button
+																				className="button is-small is-danger is-light"
+																				data-tooltip="Cancel"
+																				onClick={() =>
+																					setAddonEditor(person, null)
+																				}>
+																				<IconX size={18} className="" />
+																			</button>
+																		</p>
+																	</div>
+																</div>
+															</div>
+														)}
+
+														{Object.keys(person.subitems).length > 0 && (
+															<div className="field is-grouped is-grouped-multiline mt-3">
+																{Object.values(person.subitems)
+																	.reverse()
+																	.map((addon, i) => (
+																		<div className="control" key={i}>
+																			<div className="tags are-medium has-addons">
+																				<span className="tag is-info has-tooltip-right">{`$${toDoubleString(
+																					addon.amount
+																				)}`}</span>
+																				<span className="tag">
+																					{addon.name}
+																				</span>
+																				<span
+																					className="tag is-info is-light"
+																					data-tooltip="Edit this item"
+																					onClick={() => {
+																						setAddonEditor(person, _ => addon);
+																					}}>
+																					<span className="icon is-info is-light">
+																						<IconPencil
+																							size={18}
+																							className=""
+																						/>
+																					</span>
+																				</span>
+																				<span
+																					className="tag is-danger is-light"
+																					data-tooltip="Remove this item"
+																					onClick={() =>
+																						removeAddon(person, addon)
+																					}>
+																					<span className="icon is-danger is-light">
+																						<IconTrash size={18} className="" />
+																					</span>
+																				</span>
+																			</div>
+																		</div>
+																	))}
+															</div>
+														)}
+													</td>
+
+													<td
+														className="is-vcentered has-text-weight-bold has-text-primary-dark has-text-right has-tooltip-left has-tooltip-text-left"
+														data-tooltip={getPriceBreakdown(dataState, person)}>
+														<PriceLevel
+															price={getTotalPersonCharges(dataState, person)}
+														/>
+
+														{hasVenmo && (
+															<a
+																href={getPaymentUrl(dataState, person)}
+																target="_blank"
+																rel="noreferrer">
+																<button
+																	className="button is-link is-fullwidth"
+																	data-tooltip="Pay with Venmo">
+																	<Venmo size={48} />
+																</button>
+															</a>
+														)}
+													</td>
+												</tr>
+											))}
+									</tbody>
+								</table>
+							)}
+						</section>
+					</div>
 				</div>
 			</main>
 

@@ -1,4 +1,6 @@
-import { Item } from "./models/Item";
+import type { Item } from "./models/Item";
+import type { Person } from "./models/Person";
+import type { SerializableState } from "./models/SerializableState";
 
 export type ItemRecord<T extends Item = Item> = Record<string, T>;
 
@@ -68,3 +70,38 @@ export const getDataAttributes = (props: object): Record<string, string> =>
 	Object.fromEntries(
 		Object.entries(props).filter(([key, _]) => key.startsWith("data-"))
 	);
+
+export const getTotalCharges = (items: ItemRecord): number =>
+	Object.values(items).reduce(
+		(previous, current) => previous + parseFloat(current.amount),
+		0
+	);
+
+export const getChargeSplit = (data: SerializableState): number =>
+	getTotalCharges(data.charges) / Object.keys(data.people).length;
+
+export const getTotalPersonCharges = (
+	data: SerializableState,
+	person: Person
+): number => {
+	const subtotal = parseFloat(person.amount) + getTotalCharges(person.subitems);
+	return subtotal + getTax(parseFloat(person.amount)) + getChargeSplit(data);
+};
+
+export const getPriceBreakdown = (
+	data: SerializableState,
+	person: Person
+): string => {
+	const lines = [`Base amount of $${toDoubleString(person.amount)}`, "Plus:"];
+
+	if (!isEmptyTree(person.subitems)) {
+		lines.push(
+			`\t$${toDoubleString(getTotalCharges(person.subitems))} of other items`
+		);
+	}
+
+	lines.push(`\t$${toDoubleString(getTax(parseFloat(person.amount)))} in tax`);
+	lines.push(`\t$${toDoubleString(getChargeSplit(data))} from fees`);
+
+	return lines.join("\n");
+};
