@@ -85,7 +85,7 @@ export const getTotalPersonCharges = (
 	person: Person
 ): number => {
 	const subtotal = parseFloat(person.amount) + getTotalCharges(person.subitems);
-	return subtotal + getTax(parseFloat(person.amount)) + getChargeSplit(data);
+	return subtotal + getTax(subtotal) + getChargeSplit(data);
 };
 
 export const getPriceBreakdown = (
@@ -93,14 +93,15 @@ export const getPriceBreakdown = (
 	person: Person
 ): string => {
 	const lines = [`Base amount of $${toDoubleString(person.amount)}`, "Plus:"];
+	const addonSubtotal = getTotalCharges(person.subitems);
 
 	if (!isEmptyTree(person.subitems)) {
-		lines.push(
-			`\t$${toDoubleString(getTotalCharges(person.subitems))} of other items`
-		);
+		lines.push(`\t$${toDoubleString(addonSubtotal)} of other items`);
 	}
 
-	lines.push(`\t$${toDoubleString(getTax(parseFloat(person.amount)))} in tax`);
+	const subtotal = parseFloat(person.amount) + addonSubtotal;
+
+	lines.push(`\t$${toDoubleString(getTax(subtotal))} in tax`);
 	lines.push(`\t$${toDoubleString(getChargeSplit(data))} from fees`);
 
 	return lines.join("\n");
