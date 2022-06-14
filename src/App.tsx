@@ -735,7 +735,7 @@ const App = () => {
 														)}
 
 														{Object.keys(person.subitems).length > 0 && (
-															<div className="field is-grouped is-grouped-multiline mt-3">
+															<div className="field subitem is-grouped is-grouped-multiline mt-3">
 																{Object.values(person.subitems)
 																	.reverse()
 																	.map((addon, i) => (
@@ -748,7 +748,7 @@ const App = () => {
 																					{addon.name}
 																				</span>
 																				<span
-																					className="tag is-info is-light"
+																					className="tag action is-info is-light"
 																					data-tooltip="Edit this item"
 																					onClick={() => {
 																						setAddonEditor(person, _ => addon);
@@ -761,7 +761,7 @@ const App = () => {
 																					</span>
 																				</span>
 																				<span
-																					className="tag is-danger is-light"
+																					className="tag action is-danger is-light"
 																					data-tooltip="Remove this item"
 																					onClick={() =>
 																						removeAddon(person, addon)

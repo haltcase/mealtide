@@ -43,4 +43,30 @@ body {
 	.toolbar .button > .text {
 		display: none;
 	}
+
+	.subitem.field .tags {
+		margin-bottom: 0.75rem;
+	}
+
+	.subitem.field .control {
+		width: 100%;
+	}
+
+	.subitem.field .tags .tag {
+		margin-bottom: 0;
+	}
+
+	.subitem.field .tags.has-addons .tag {
+		border-radius: 0;
+	}
+
+	.subitem.field .tag {
+		display: flex;
+		width: 100%;
+	}
+
+	.subitem.field .tag.action {
+		display: flex;
+		width: 50%;
+	}
 }
