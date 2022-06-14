@@ -128,7 +128,7 @@ const App = () => {
 	const chargeAmountInput = useRef<HTMLInputElement>(null);
 	const isInternalHistoryChange = useRef(false);
 
-	const updateState = (event?: PopStateEvent) => {
+	const updateStateFromUrl = (event?: PopStateEvent) => {
 		console.log("updateState", event);
 		if (event != null) {
 			event?.preventDefault();
@@ -154,7 +154,7 @@ const App = () => {
 	};
 
 	// on initial render, load state in the URL if present
-	useOnce(updateState);
+	useOnce(updateStateFromUrl);
 
 	// whenever data changes, update the URL with the new serialized state
 	useEffect(() => {
@@ -165,10 +165,10 @@ const App = () => {
 	// listen for back button events and load state from the new location
 	// this provides undo/redo capability
 	useEffect(() => {
-		window.addEventListener("popstate", updateState);
+		window.addEventListener("popstate", updateStateFromUrl);
 
 		return () => {
-			window.removeEventListener("popstate", updateState);
+			window.removeEventListener("popstate", updateStateFromUrl);
 		};
 	});
 
