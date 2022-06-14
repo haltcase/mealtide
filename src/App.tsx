@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { MutableRefObject, SyntheticEvent } from "react";
+import { produce } from "immer";
+import { useImmer } from "use-immer";
 
 import {
 	IconArrowBackUp,
@@ -43,7 +45,8 @@ import {
 	parseFloat,
 	toDoubleString,
 	getPriceBreakdown,
-	getTotalPersonCharges
+	getTotalPersonCharges,
+	ItemRecord
 } from "./utilities";
 
 import { getPaymentUrl } from "./venmo";
@@ -102,7 +105,7 @@ const saveStateToUrl = (
 };
 
 const App = () => {
-	const [dataState, setDataState] = useState<SerializableState>({
+	const [dataState, setDataState] = useImmer<SerializableState>({
 		orderTitle: "",
 		venmoUsername: "",
 		people: {},
@@ -114,11 +117,10 @@ const App = () => {
 	const [isEditingCharge, setIsEditingCharge] = useState(false);
 	const [isPersonValid, setIsPersonValid] = useState(false);
 	const [isChargeValid, setIsChargeValid] = useState(false);
-	const [newCharge, setNewCharge] = useState<PartyCharge>(createPartyCharge());
-	const [newPerson, setNewPerson] = useState<Person>(createPerson());
+	const [newCharge, setNewCharge] = useImmer<PartyCharge>(createPartyCharge());
+	const [newPerson, setNewPerson] = useImmer<Person>(createPerson());
 
-	// FIXME: use `ReturnType<typeof useState<Item>>` when supported
-	const [addonMap, setAddonEditorMap] = useState<Record<string, Addon>>({});
+	const [addonMap, setAddonEditorMap] = useImmer<ItemRecord<Addon>>({});
 
 	const personNameInput = useRef<HTMLInputElement>(null);
 	const personAmountInput = useRef<HTMLInputElement>(null);
@@ -183,90 +185,55 @@ const App = () => {
 	}, [dataState.venmoUsername]);
 
 	const setOrderTitle = (orderTitle: string): void =>
-		setDataState(state => ({
-			...state,
-			orderTitle
-		}));
+		setDataState(state => {
+			state.orderTitle = orderTitle;
+		});
 
 	const setVenmoUsername = (venmoUsername: string): void =>
-		setDataState(state => ({
-			...state,
-			venmoUsername
-		}));
+		setDataState(state => {
+			state.venmoUsername = venmoUsername;
+		});
 
 	const addOrUpdateCharge = (charge: PartyCharge): void =>
-		setDataState(state => ({
-			...state,
-			charges: {
-				...state.charges,
-				[charge.name]: charge
-			}
-		}));
+		setDataState(state => {
+			state.charges[charge.name] = charge;
+		});
 
-	const removeCharge = (charge: PartyCharge): void => {
-		const { [charge.name]: existing, ...others } = dataState.charges;
-		setDataState(state => ({
-			...state,
-			charges: others
-		}));
-	};
+	const removeCharge = (charge: PartyCharge): void =>
+		setDataState(state => {
+			delete state.charges[charge.name];
+		});
 
 	const addOrUpdatePerson = (person: Person): void =>
-		setDataState(state => ({
-			...state,
-			people: {
-				...state.people,
-				[person.name]: person
-			}
-		}));
-
-	const removePerson = (person: Person): void => {
-		const { [person.name]: existing, ...others } = dataState.people;
-		setDataState(state => ({
-			...state,
-			people: others
-		}));
-	};
-
-	const removeAddon = (person: Person, addon: Addon): void => {
 		setDataState(state => {
-			const { [addon.name]: existing, ...others } =
-				state.people[person.name].subitems;
-
-			return {
-				...state,
-				people: {
-					...state.people,
-					[person.name]: {
-						...person,
-						subitems: others
-					}
-				}
-			};
+			state.people[person.name] = person;
 		});
-	};
 
-	const dropAddonEditor = (person: Person): Record<string, Addon> => {
-		const { [person.name]: existing, ...others } = addonMap;
-		return others;
-	};
+	const removePerson = (person: Person): void =>
+		setDataState(state => {
+			delete state.people[person.name];
+		});
+
+	const removeAddon = (person: Person, addon: Addon): void =>
+		setDataState(state => {
+			delete state.people[person.name].subitems[addon.name];
+		});
 
 	const setAddonEditor = (
 		person: Person,
 		addon: ((addon: Addon) => Addon | null) | null
 	) => {
 		if (addon == null) {
-			setAddonEditorMap(dropAddonEditor(person));
+			setAddonEditorMap(state => {
+				delete state[person.name];
+			});
 		} else {
 			setAddonEditorMap(state => {
 				const newValue = addon(state[person.name]);
 				if (newValue == null) {
-					return dropAddonEditor(person);
+					delete state[person.name];
 				} else {
-					return {
-						...state,
-						[person.name]: newValue
-					};
+					state[person.name] = newValue;
 				}
 			});
 		}
@@ -297,13 +264,11 @@ const App = () => {
 	};
 
 	const submitAddon = (person: Person, addon: Addon): void => {
-		addOrUpdatePerson({
-			...person,
-			subitems: {
-				...person.subitems,
-				[addon.name]: addon
-			}
-		});
+		addOrUpdatePerson(
+			produce(person, person => {
+				person.subitems[addon.name] = addon;
+			})
+		);
 
 		setAddonEditor(person, _ => null);
 	};
@@ -401,7 +366,9 @@ const App = () => {
 												type="text"
 												placeholder="What are we getting?"
 												value={dataState.orderTitle}
-												onChange={e => setOrderTitle(e.target.value)}
+												onChange={e =>
+													setOrderTitle(capitalize(e.target.value))
+												}
 											/>
 										</p>
 									</div>
@@ -459,9 +426,8 @@ const App = () => {
 												value={newCharge.name}
 												onKeyDown={e => e.key === "Enter" && submitCharge()}
 												onChange={e =>
-													setNewCharge({
-														...newCharge,
-														name: capitalize(e.target.value)
+													setNewCharge(state => {
+														state.name = capitalize(e.target.value);
 													})
 												}
 											/>
@@ -482,9 +448,8 @@ const App = () => {
 												value={newCharge.amount}
 												onKeyDown={e => e.key === "Enter" && submitCharge()}
 												onChange={e =>
-													setNewCharge({
-														...newCharge,
-														amount: e.target.value
+													setNewCharge(state => {
+														state.amount = e.target.value;
 													})
 												}
 											/>
@@ -569,9 +534,8 @@ const App = () => {
 												value={newPerson.name}
 												onKeyDown={e => e.key === "Enter" && submitPerson()}
 												onChange={e =>
-													setNewPerson({
-														...newPerson,
-														name: capitalize(e.target.value)
+													setNewPerson(state => {
+														state.name = capitalize(e.target.value);
 													})
 												}
 											/>
@@ -593,9 +557,8 @@ const App = () => {
 												value={newPerson.amount}
 												onKeyDown={e => e.key === "Enter" && submitPerson()}
 												onChange={e =>
-													setNewPerson({
-														...newPerson,
-														amount: parseFloat(e.target.value)
+													setNewPerson(state => {
+														state.amount = parseFloat(e.target.value);
 													})
 												}
 											/>
@@ -694,10 +657,14 @@ const App = () => {
 																				placeholder="What is it?"
 																				value={addonMap[person.name].name}
 																				onChange={e =>
-																					setAddonEditor(person, current => ({
-																						...current,
-																						name: capitalize(e.target.value)
-																					}))
+																					setAddonEditor(
+																						person,
+																						produce((current: Addon) => {
+																							current.name = capitalize(
+																								e.target.value
+																							);
+																						})
+																					)
 																				}
 																			/>
 																			<span className="icon is-small is-left">
@@ -721,10 +688,12 @@ const App = () => {
 																					)
 																				}
 																				onChange={e =>
-																					setAddonEditor(person, current => ({
-																						...current,
-																						amount: e.target.value
-																					}))
+																					setAddonEditor(
+																						person,
+																						produce((current: Addon) => {
+																							current.amount = e.target.value;
+																						})
+																					)
 																				}
 																			/>
 																			<span className="icon is-small is-left">
