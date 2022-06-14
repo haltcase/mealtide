@@ -789,9 +789,10 @@ const App = () => {
 																href={getPaymentUrl(dataState, person)}
 																target="_blank"
 																rel="noreferrer">
-																<button
-																	className="button is-link is-fullwidth"
-																	data-tooltip="Pay with Venmo">
+																<button className="button is-link is-fullwidth">
+																	<span className="is-size-7">
+																		pay with&nbsp;
+																	</span>
 																	<Venmo size={48} />
 																</button>
 															</a>
