@@ -1,7 +1,8 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { ChakraProvider } from "@chakra-ui/react";
 
-import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
+import * as serviceWorkerRegistration from "./service-worker-registration";
 
 import App from "./App";
 
@@ -14,7 +15,9 @@ if (rootElement != null) {
 
 	root.render(
 		<StrictMode>
-			<App />
+			<ChakraProvider>
+				<App />
+			</ChakraProvider>
 		</StrictMode>
 	);
 

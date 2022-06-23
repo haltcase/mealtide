@@ -1,13 +1,17 @@
-import type { DomNumber } from "../utilities";
-import { toDoubleString } from "../utilities";
+import { ChakraProps, Flex, forwardRef, Spacer, Text } from "@chakra-ui/react";
+import type { DomNumber } from "../models/types";
+import { toDoubleString } from "../utilities/calc";
 
-interface PriceLevelProps {
+interface PriceLevelProps extends ChakraProps {
 	price: DomNumber;
 }
 
-export const PriceLevel = (props: PriceLevelProps): JSX.Element => (
-	<div className="level is-mobile">
-		<div className="level-left">$</div>
-		<div className="level-right">{toDoubleString(props.price)}</div>
-	</div>
+export const PriceLevel = forwardRef(
+	({ price, ...rest }: PriceLevelProps, ref) => (
+		<Flex ref={ref} {...rest}>
+			<Text as="span">$</Text>
+			<Spacer />
+			<Text as="span">{toDoubleString(price)}</Text>
+		</Flex>
+	)
 );

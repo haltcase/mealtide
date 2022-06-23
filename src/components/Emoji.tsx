@@ -1,17 +1,19 @@
-import { getDataAttributes } from "../utilities";
+import { ChakraProps, forwardRef, Text, Tooltip } from "@chakra-ui/react";
 
-interface EmojiProps {
+interface EmojiProps extends ChakraProps {
 	text: string;
 	label: string;
-	className?: string;
+	showTooltip?: boolean;
 }
 
-export const Emoji = (props: EmojiProps): JSX.Element => (
-	<span
-		className={props.className ?? ""}
-		role="img"
-		aria-label={props.label}
-		{...getDataAttributes(props)}>
-		{props.text}
-	</span>
+export const Emoji = forwardRef(
+	({ label, text, showTooltip, ...rest }: EmojiProps, ref): JSX.Element => {
+		const child = (
+			<Text as="span" role="img" aria-label={label} ref={ref} {...rest}>
+				{text}
+			</Text>
+		);
+
+		return showTooltip ? <Tooltip label={label}>{child}</Tooltip> : child;
+	}
 );

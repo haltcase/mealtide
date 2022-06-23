@@ -1,13 +1,13 @@
-import type { DomNumber, ItemRecord } from "../utilities";
 import type { Addon } from "./Addon";
-import type { Item } from "./Item";
+import type { Item, ItemFactory } from "./Item";
+import type { ItemRecord } from "./types";
 
 export interface Person extends Item {
 	type: "Person";
 	subitems: ItemRecord<Addon>;
 }
 
-export const createPerson = (name = "", amount: DomNumber = ""): Person => ({
+export const createPerson: ItemFactory<Person> = (name = "", amount = "") => ({
 	name,
 	amount,
 	subitems: {},

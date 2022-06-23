@@ -5,8 +5,10 @@
   "start_url": ".",
   "display": "standalone",
   "background_color": "#fff",
-  "theme_color": "#00947e",
+	"theme_color": "#2c7a7b",
   "description": "App to help figure out splits for lunch (or other) orders.",
+	"orientation": "any",
+	"related_applications": [],
   "icons": [
     {
       "src": "icons/71x71-icon.png",

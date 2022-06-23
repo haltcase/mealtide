@@ -1,23 +1,22 @@
+import { Button, Text, Tooltip } from "@chakra-ui/react";
 import type { MouseEventHandler } from "react";
-import type { TablerIcon } from "@tabler/icons";
+
+import type { IconType } from "react-icons";
 
 interface ToolbarActionProps {
 	name: string;
-	icon: TablerIcon;
+	icon: IconType;
 	onClick?: MouseEventHandler<HTMLButtonElement> | undefined;
 }
 
 export const ToolbarAction = (props: ToolbarActionProps): JSX.Element => {
 	return (
-		<p className="control has-tooltip-bottom" data-tooltip={props.name}>
-			<button
-				className="button is-normal is-primary is-light"
-				onClick={props.onClick}>
-				<span className="icon">
-					<props.icon size={12} />
-				</span>
-				<span className="text">{props.name}</span>
-			</button>
-		</p>
+		<Tooltip label={props.name} display={{ md: "none" }}>
+			<Button leftIcon={<props.icon size={20} />} onClick={props.onClick}>
+				<Text as="span" display={{ base: "none", md: "inline" }}>
+					{props.name}
+				</Text>
+			</Button>
+		</Tooltip>
 	);
 };

@@ -1,15 +1,15 @@
-import type { DomNumber, ItemRecord } from "../utilities";
-import type { Item } from "./Item";
+import type { Item, ItemFactory } from "./Item";
+import type { ItemRecord } from "./types";
 
 export interface PartyCharge extends Item {
 	type: "PartyCharge";
 	subitems: ItemRecord<never>;
 }
 
-export const createPartyCharge = (
+export const createPartyCharge: ItemFactory<PartyCharge> = (
 	name = "",
-	amount: DomNumber = ""
-): PartyCharge => ({
+	amount = ""
+) => ({
 	name,
 	amount,
 	subitems: {},
