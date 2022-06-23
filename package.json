@@ -2,7 +2,7 @@
 	"name": "lunch-calculator",
 	"version": "1.0.0",
 	"homepage": "https://lunchcalc.bolingen.me",
-	"description": "",
+	"description": "App to help figure out splits for lunch (or other) orders.",
 	"keywords": [],
 	"main": "src/index.tsx",
 	"dependencies": {
@@ -29,8 +29,11 @@
 		"@typescript-eslint/eslint-plugin": "^5.24.0",
 		"@typescript-eslint/parser": "^5.24.0",
 		"eslint": "^8.15.0",
-		"eslint-plugin-simple-import-sort": "7.0.0",
+		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-react": "^7.29.4",
+		"eslint-plugin-simple-import-sort": "^7.0.0",
+		"husky": "^8.0.1",
+		"mrm": "^4.0.0",
 		"prettier": "^2.6.2",
 		"react-scripts": "5.0.1",
 		"typescript": "4.6.4"
@@ -39,12 +42,18 @@
 		"start": "react-scripts start",
 		"build": "react-scripts build",
 		"test": "react-scripts test --env=jsdom",
-		"eject": "react-scripts eject"
+		"eject": "react-scripts eject",
+		"format": "eslint --fix src && prettier --write src",
+		"prepare": "husky install"
 	},
 	"browserslist": [
 		">0.2%",
 		"not dead",
 		"not ie <= 11",
 		"not op_mini all"
-	]
+	],
+	"lint-staged": {
+		"*.js": "eslint --cache --fix",
+		"*.src": "prettier --write"
+	}
 }

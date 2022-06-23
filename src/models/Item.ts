@@ -1,5 +1,5 @@
 import type { Addon } from "./Addon";
-import type { ItemRecord, DomNumber } from "./types";
+import type { DomNumber, ItemRecord } from "./types";
 
 export interface Item {
 	type: "Person" | "PartyCharge" | "Addon";

@@ -1,5 +1,4 @@
-import { Button, ButtonGroup, Tooltip, IconButton } from "@chakra-ui/react";
-
+import { Button, ButtonGroup, IconButton, Tooltip } from "@chakra-ui/react";
 import { TbPencil, TbTrash } from "react-icons/tb";
 
 import { Item } from "../models/Item";

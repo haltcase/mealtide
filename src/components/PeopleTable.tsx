@@ -1,35 +1,32 @@
 import {
-	Table,
-	Thead,
-	Tbody,
-	Tr,
-	Th,
-	Td,
-	TableContainer,
-	Stack,
-	Flex,
-	Text,
-	forwardRef,
-	Spacer,
 	ButtonGroup,
+	Flex,
+	forwardRef,
 	IconButton,
-	Tooltip
+	Spacer,
+	Stack,
+	Table,
+	TableContainer,
+	Tbody,
+	Td,
+	Text,
+	Th,
+	Thead,
+	Tooltip,
+	Tr
 } from "@chakra-ui/react";
-
 import { TbPencil, TbPlus, TbTrash } from "react-icons/tb";
-
 import { Updater } from "use-immer";
-
-import { ItemEditor } from "./ItemEditor";
-import { ItemTag } from "./ItemTag";
-import { PaymentButton } from "./PaymentButton";
-import { PriceBreakdown } from "./PriceBreakdown";
-import { PriceLevel } from "./PriceLevel";
 
 import { Addon, createAddon } from "../models/Addon";
 import { Person } from "../models/Person";
 import { SerializableState } from "../models/SerializableState";
 import { getPriceDetails } from "../utilities/calc";
+import { ItemEditor } from "./ItemEditor";
+import { ItemTag } from "./ItemTag";
+import { PaymentButton } from "./PaymentButton";
+import { PriceBreakdown } from "./PriceBreakdown";
+import { PriceLevel } from "./PriceLevel";
 
 interface PeopleTableProps {
 	state: SerializableState;

@@ -1,4 +1,4 @@
-const [, warn] = ["off", "warn", "error"];
+const [, warn, error] = ["off", "warn", "error"];
 
 // eslint-disable-next-line no-undef
 module.exports = {
@@ -10,7 +10,8 @@ module.exports = {
 		"eslint:recommended",
 		"plugin:react/recommended",
 		"plugin:react/jsx-runtime",
-		"plugin:@typescript-eslint/recommended"
+		"plugin:@typescript-eslint/recommended",
+		"prettier"
 	],
 	parser: "@typescript-eslint/parser",
 	parserOptions: {
@@ -20,7 +21,7 @@ module.exports = {
 		ecmaVersion: "latest",
 		sourceType: "module"
 	},
-	plugins: ["react", "@typescript-eslint"],
+	plugins: ["react", "@typescript-eslint", "simple-import-sort"],
 	rules: {
 		"@typescript-eslint/no-unused-vars": [
 			warn,
@@ -29,6 +30,8 @@ module.exports = {
 				ignoreRestSiblings: true,
 				varsIgnorePattern: "^_"
 			}
-		]
+		],
+		"simple-import-sort/imports": error,
+		"simple-import-sort/exports": error
 	}
 };

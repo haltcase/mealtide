@@ -7,12 +7,11 @@ import {
 	TbShare
 } from "react-icons/tb";
 
-import { Emoji } from "./Emoji";
-import { ToolbarAction } from "./ToolbarAction";
-
 import { goBack, goForward } from "../utilities/history";
 import { copyUrl, share } from "../utilities/sharing";
 import { useToast } from "../utilities/toasts";
+import { Emoji } from "./Emoji";
+import { ToolbarAction } from "./ToolbarAction";
 
 interface NavProps {
 	onReset: React.MouseEventHandler<HTMLButtonElement>;

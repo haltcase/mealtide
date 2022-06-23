@@ -1,7 +1,6 @@
 import type { Person } from "../models/Person";
 import type { SerializableState } from "../models/SerializableState";
 import type { DomNumber, ItemRecord } from "../models/types";
-
 import { parseDomFloat } from "./helpers";
 
 // TODO: currently this is hardcoded to the MN tax rate,

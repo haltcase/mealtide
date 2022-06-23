@@ -1,6 +1,5 @@
 import { Button, Text, Tooltip } from "@chakra-ui/react";
 import type { MouseEventHandler } from "react";
-
 import type { IconType } from "react-icons";
 
 interface ToolbarActionProps {

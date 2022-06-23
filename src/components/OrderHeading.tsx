@@ -1,6 +1,3 @@
-import { SiVenmo } from "react-icons/si";
-import { TbAt, TbNote } from "react-icons/tb";
-
 import {
 	ChakraProps,
 	Input,
@@ -9,6 +6,9 @@ import {
 	InputRightAddon,
 	Stack
 } from "@chakra-ui/react";
+import { SiVenmo } from "react-icons/si";
+import { TbAt, TbNote } from "react-icons/tb";
+
 import { capitalize } from "../utilities/helpers";
 
 interface OrderHeadingProps extends ChakraProps {

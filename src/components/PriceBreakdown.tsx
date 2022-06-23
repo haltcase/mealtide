@@ -1,20 +1,19 @@
 import {
-	Popover,
-	PopoverTrigger,
-	PopoverContent,
-	PopoverHeader,
-	PopoverBody,
-	PopoverArrow,
-	PopoverCloseButton,
-	IconButton,
-	Text,
-	Stack,
-	Spacer,
+	Divider,
 	Flex,
 	forwardRef,
-	Divider
+	IconButton,
+	Popover,
+	PopoverArrow,
+	PopoverBody,
+	PopoverCloseButton,
+	PopoverContent,
+	PopoverHeader,
+	PopoverTrigger,
+	Spacer,
+	Stack,
+	Text
 } from "@chakra-ui/react";
-
 import { TbInfoCircle } from "react-icons/tb";
 
 import { Person } from "../models/Person";

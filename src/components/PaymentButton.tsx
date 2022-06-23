@@ -1,8 +1,8 @@
 import { Box, Button, Text } from "@chakra-ui/react";
 import { IoLogoVenmo } from "react-icons/io5";
+
 import { Person } from "../models/Person";
 import { SerializableState } from "../models/SerializableState";
-
 import { getPaymentUrl } from "../utilities/venmo";
 
 interface PaymentButtonProps {

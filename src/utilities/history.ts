@@ -1,6 +1,6 @@
-import { MutableRefObject } from "react";
 import type { useToast } from "@chakra-ui/react";
 import { compressToURI, decompressFromURI } from "lz-ts";
+import { MutableRefObject } from "react";
 
 import { SerializableState } from "../models/SerializableState";
 import { isEmptyTree } from "./helpers";

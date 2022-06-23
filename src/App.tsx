@@ -1,5 +1,3 @@
-import { useEffect, useRef, useState } from "react";
-
 import {
 	Alert,
 	AlertDescription,
@@ -9,12 +7,12 @@ import {
 	Flex,
 	Stack
 } from "@chakra-ui/react";
-
-import { useImmer } from "use-immer";
+import { useEffect, useRef, useState } from "react";
 import { TbPlus } from "react-icons/tb";
+import { useImmer } from "use-immer";
 
-import { ItemEditor } from "./components/ItemEditor";
 import { Footer } from "./components/Footer";
+import { ItemEditor } from "./components/ItemEditor";
 import { ItemHeading } from "./components/ItemHeading";
 import { ItemTag } from "./components/ItemTag";
 import { Nav } from "./components/Nav";
@@ -22,9 +20,9 @@ import { OrderHeading } from "./components/OrderHeading";
 import { PeopleTable } from "./components/PeopleTable";
 import { Section } from "./components/Section";
 import { useOnce } from "./hooks/useOnce";
+import { createPartyCharge, PartyCharge } from "./models/PartyCharge";
+import { createPerson, Person } from "./models/Person";
 import { SerializableState } from "./models/SerializableState";
-import { PartyCharge, createPartyCharge } from "./models/PartyCharge";
-import { Person, createPerson } from "./models/Person";
 import { isEmptyTree } from "./utilities/helpers";
 import { getStateFromUrl, saveStateToUrl } from "./utilities/history";
 import { useToast } from "./utilities/toasts";
