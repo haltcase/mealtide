@@ -39,7 +39,7 @@ export const Nav = (props: NavProps): JSX.Element => {
 					userSelect="none">
 					<Emoji as="div" text="🍔" label="burger" />
 					<Text as="div" marginLeft={2}>
-						lunch calculator
+						mealtide
 					</Text>
 				</HStack>
 			</Flex>

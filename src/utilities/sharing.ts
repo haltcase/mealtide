@@ -25,7 +25,7 @@ export const share = (showToast: ReturnType<typeof useToast>) => {
 
 	const content = {
 		title: `Lunch Order for ${new Date().toLocaleDateString()}`,
-		text: "See this lunch order to find out your total",
+		text: "Visit mealtide to see the details for this order",
 		url: document.location.toString()
 	};
 

@@ -1,7 +1,7 @@
 {
-	"name": "lunch-calculator",
+	"name": "mealtide",
 	"version": "1.0.0",
-	"homepage": "https://lunchcalc.bolingen.me",
+	"homepage": "https://mealtide.bolingen.me",
 	"description": "App to help figure out splits for lunch (or other) orders.",
 	"keywords": [],
 	"main": "src/index.tsx",
