@@ -2,8 +2,8 @@ import { Button, ButtonGroup, IconButton, Tooltip } from "@chakra-ui/react";
 import { TbPencil, TbTrash } from "react-icons/tb";
 
 import { Item } from "../models/Item";
-import { toDoubleString } from "../utilities/calc";
-import { getItemTypeDisplayName } from "../utilities/helpers";
+import { getTax, toDoubleString } from "../utilities/calc";
+import { getItemTypeDisplayName, parseDomFloat } from "../utilities/helpers";
 import { ItemEditor } from "./ItemEditor";
 
 interface ItemTagProps<T extends Item> {
@@ -26,7 +26,10 @@ export const ItemTag = <T extends Item>({
 	<ButtonGroup size="sm" isAttached key={item.name}>
 		<Tooltip label={title} placement="bottom-start">
 			<Button as="span" colorScheme="blue">{`$${toDoubleString(
-				item.amount
+				parseDomFloat(item.amount) +
+					(item.name.toLowerCase() === "tip"
+						? 0
+						: getTax(parseDomFloat(item.amount)))
 			)}`}</Button>
 		</Tooltip>
 

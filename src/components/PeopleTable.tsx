@@ -10,6 +10,7 @@ import {
 	Tbody,
 	Td,
 	Text,
+	Tfoot,
 	Th,
 	Thead,
 	Tooltip,
@@ -176,6 +177,25 @@ export const PeopleTable = forwardRef(
 								</Tr>
 							))}
 					</Tbody>
+					<Tfoot>
+						<Tr>
+							<Td></Td>
+							<Td>
+								<Stack direction="column">
+									<Text fontWeight="bold">Grand Total</Text>
+									<PriceLevel
+										fontWeight="bold"
+										color="teal.400"
+										price={Object.values(state.people).reduce(
+											(previous, current) =>
+												previous + getPriceDetails(state, current).total,
+											0
+										)}
+									/>
+								</Stack>
+							</Td>
+						</Tr>
+					</Tfoot>
 				</Table>
 			</TableContainer>
 		);

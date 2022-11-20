@@ -19,7 +19,12 @@ export const toDoubleString = (amount: DomNumber): string =>
 
 export const getTotalCharges = (items: ItemRecord): number =>
 	Object.values(items).reduce(
-		(previous, current) => previous + parseDomFloat(current.amount),
+		(previous, current) =>
+			previous +
+			parseDomFloat(current.amount) +
+			(current.name.toLowerCase() === "tip"
+				? 0
+				: getTax(parseDomFloat(current.amount))),
 		0
 	);
 
