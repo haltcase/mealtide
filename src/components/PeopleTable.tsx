@@ -61,8 +61,8 @@ export const PeopleTable = forwardRef(
 					<Tbody>
 						{Object.values(state.people)
 							.reverse()
-							.map((person, i) => (
-								<Tr key={i}>
+							.map(person => (
+								<Tr key={person.name}>
 									<Td width={{ base: "50%", md: "75%" }}>
 										<Flex
 											gap={2}
@@ -134,11 +134,11 @@ export const PeopleTable = forwardRef(
 											<Flex flexWrap="wrap" marginTop={2} rowGap={2}>
 												{Object.values(person.subitems)
 													.reverse()
-													.map((addon, i) => (
+													.map(addon => (
 														<ItemTag
 															title={`This is an addon item for ${person.name}`}
 															item={addon}
-															key={i}
+															key={addon.name}
 															onRemove={item => removeAddon(person, item)}
 															onSubmit={item => {
 																removeAddon(person, addon);
