@@ -74,6 +74,7 @@ export const PeopleTable = forwardRef(
 
 											<ButtonGroup size="sm" isAttached>
 												<ItemEditor
+													key={person.name}
 													trigger={
 														<IconButton
 															aria-label="Add another item"
@@ -92,6 +93,7 @@ export const PeopleTable = forwardRef(
 												/>
 
 												<ItemEditor
+													key={person.name}
 													trigger={
 														<IconButton
 															aria-label="Edit this item"
@@ -112,6 +114,7 @@ export const PeopleTable = forwardRef(
 												/>
 
 												<Tooltip
+													key={person.name}
 													label="Remove this item"
 													placement="bottom-start">
 													<IconButton
