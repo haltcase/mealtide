@@ -12,8 +12,9 @@
 		"framer-motion": "^6",
 		"immer": "9.0.14",
 		"lz-ts": "1.1.2",
-		"react": "18.1.0",
-		"react-dom": "18.1.0",
+		"next": "^13.4.1",
+		"react": "18.2.0",
+		"react-dom": "18.2.0",
 		"react-icons": "4.4.0",
 		"use-immer": "0.7.0",
 		"workbox-core": "6.5.3",
@@ -33,14 +34,12 @@
 		"eslint-plugin-react": "^7.29.4",
 		"eslint-plugin-simple-import-sort": "^7.0.0",
 		"prettier": "^2.6.2",
-		"react-scripts": "5.0.1",
 		"typescript": "4.6.4"
 	},
 	"scripts": {
-		"start": "react-scripts start",
-		"build": "react-scripts build",
-		"test": "react-scripts test --env=jsdom",
-		"eject": "react-scripts eject",
+		"dev": "next dev",
+		"start": "next start",
+		"build": "next build",
 		"format": "eslint --fix src && prettier --write src"
 	},
 	"browserslist": [
