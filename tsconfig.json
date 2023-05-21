@@ -1,14 +1,43 @@
 {
-	"include": [
-		"./src/**/*"
-	],
 	"compilerOptions": {
-		"strict": true,
+		"allowJs": true,
+		"alwaysStrict": true,
 		"esModuleInterop": true,
-		"lib": [
-			"dom",
-			"es2019"
-		],
-		"jsx": "react-jsx"
-	}
+		"forceConsistentCasingInFileNames": true,
+		"incremental": true,
+		"isolatedModules": true,
+		"jsx": "preserve",
+		"lib": ["dom", "es2017"],
+		"module": "esnext",
+		"moduleResolution": "node",
+		"noEmit": true,
+		"noFallthroughCasesInSwitch": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"resolveJsonModule": true,
+		"skipLibCheck": true,
+		"strict": true,
+		"target": "esnext",
+		"baseUrl": "src",
+		"paths": {
+			"@/*": ["./*"]
+		},
+		"plugins": [
+			{
+				"name": "next"
+			}
+		]
+	},
+	"exclude": ["node_modules"],
+	"include": [
+		"**/*.ts",
+		"**/*.tsx",
+		"**/*.js",
+		"**/*.jsx",
+		"**/*.mjs",
+		".*.js",
+		".eslintrc.cjs",
+		"postcss.config.cjs",
+		".next/types/**/*.ts"
+	]
 }
