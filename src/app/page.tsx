@@ -1,3 +1,5 @@
+"use client";
+
 import {
 	Alert,
 	AlertDescription,
@@ -11,23 +13,25 @@ import { useEffect, useRef, useState } from "react";
 import { TbPlus } from "react-icons/tb";
 import { useImmer } from "use-immer";
 
-import { Footer } from "./components/Footer";
-import { ItemEditor } from "./components/ItemEditor";
-import { ItemHeading } from "./components/ItemHeading";
-import { ItemTag } from "./components/ItemTag";
-import { Nav } from "./components/Nav";
-import { OrderHeading } from "./components/OrderHeading";
-import { PeopleTable } from "./components/PeopleTable";
-import { Section } from "./components/Section";
-import { useOnce } from "./hooks/useOnce";
-import { createPartyCharge, PartyCharge } from "./models/PartyCharge";
-import { createPerson, Person } from "./models/Person";
-import { SerializableState } from "./models/SerializableState";
-import { isEmptyTree } from "./utilities/helpers";
-import { getStateFromUrl, saveStateToUrl } from "./utilities/history";
-import { useToast } from "./utilities/toasts";
+import { Footer } from "@/components/Footer";
+import { ItemEditor } from "@/components/ItemEditor";
+import { ItemHeading } from "@/components/ItemHeading";
+import { ItemTag } from "@/components/ItemTag";
+import { Nav } from "@/components/Nav";
+import { OrderHeading } from "@/components/OrderHeading";
+import { PeopleTable } from "@/components/PeopleTable";
+import { Section } from "@/components/Section";
+import { useOnce } from "@/hooks/useOnce";
+import { createPartyCharge, PartyCharge } from "@/models/PartyCharge";
+import { createPerson, Person } from "@/models/Person";
+import { SerializableState } from "@/models/SerializableState";
+import { isEmptyTree } from "@/utilities/helpers";
+import { getStateFromUrl, saveStateToUrl } from "@/utilities/history";
+import { useToast } from "@/utilities/toasts";
+import Head from "next/head";
+import { NextPage } from "next";
 
-const App = () => {
+const App: NextPage = () => {
 	const [dataState, setDataState] = useImmer<SerializableState>({
 		orderTitle: "",
 		venmoUsername: "",
@@ -127,6 +131,17 @@ const App = () => {
 
 	return (
 		<Box justifyItems={"center"} minHeight="100vh" backgroundColor="teal.600">
+			<Head>
+				<title>mealtide</title>
+				<meta
+					name="viewport"
+					content="width=device-width, initial-scale=1, shrink-to-fit=no"
+				/>
+				<meta name="theme-color" content="#00947e" />
+				{/* <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+				<link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" /> */}
+			</Head>
+
 			<Nav onReset={reset} />
 
 			<Stack
