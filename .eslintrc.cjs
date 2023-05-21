@@ -52,6 +52,9 @@ module.exports = {
 		},
 		{
 			files: ["**.cjs"],
+			env: {
+				node: true
+			},
 			parserOptions: {
 				sourceType: "script"
 			}
