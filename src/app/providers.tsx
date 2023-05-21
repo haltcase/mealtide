@@ -2,6 +2,7 @@
 
 import { CacheProvider } from "@chakra-ui/next-js";
 import { ChakraProvider, cookieStorageManager } from "@chakra-ui/react";
+
 import theme from "@/theme";
 
 const Providers = ({ children }: { children: React.ReactNode }) => (
