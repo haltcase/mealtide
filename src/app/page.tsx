@@ -9,6 +9,8 @@ import {
 	Flex,
 	Stack
 } from "@chakra-ui/react";
+import { NextPage } from "next";
+import Head from "next/head";
 import { useEffect, useRef, useState } from "react";
 import { TbPlus } from "react-icons/tb";
 import { useImmer } from "use-immer";
@@ -28,8 +30,6 @@ import { SerializableState } from "@/models/SerializableState";
 import { isEmptyTree } from "@/utilities/helpers";
 import { getStateFromUrl, saveStateToUrl } from "@/utilities/history";
 import { useToast } from "@/utilities/toasts";
-import Head from "next/head";
-import { NextPage } from "next";
 
 const App: NextPage = () => {
 	const [dataState, setDataState] = useImmer<SerializableState>({
