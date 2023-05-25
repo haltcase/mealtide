@@ -1,4 +1,3 @@
-import type { useToast } from "@chakra-ui/react";
 import { compressToURI, decompressFromURI } from "lz-ts";
 import { MutableRefObject } from "react";
 
@@ -15,9 +14,7 @@ export const goForward = (): void => {
 
 const serializationKey = "save";
 
-export const getStateFromUrl = (
-	showToast: ReturnType<typeof useToast>
-): SerializableState | null => {
+export const getStateFromUrl = (): SerializableState | null => {
 	console.log("getStateFromUrl");
 	const params = new URLSearchParams(document.location.search);
 
@@ -25,10 +22,10 @@ export const getStateFromUrl = (
 		try {
 			return JSON.parse(decompressFromURI(params.get(serializationKey) ?? ""));
 		} catch (error) {
-			showToast({
-				description: "Could not load data from URL",
-				status: "error"
-			});
+			// showToast({
+			// 	description: "Could not load data from URL",
+			// 	status: "error"
+			// });
 		}
 	}
 

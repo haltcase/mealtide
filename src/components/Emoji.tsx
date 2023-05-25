@@ -1,19 +1,32 @@
-import { ChakraProps, forwardRef, Text, Tooltip } from "@chakra-ui/react";
+import { Tooltip } from "@nextui-org/react";
 
-interface EmojiProps extends ChakraProps {
+interface EmojiProps {
 	text: string;
 	label: string;
 	showTooltip?: boolean;
 }
 
-export const Emoji = forwardRef(
-	({ label, text, showTooltip, ...rest }: EmojiProps, ref): JSX.Element => {
-		const child = (
-			<Text as="span" role="img" aria-label={label} ref={ref} {...rest}>
-				{text}
-			</Text>
-		);
+export const Emoji = ({
+	label,
+	text,
+	showTooltip = false
+}: EmojiProps): JSX.Element => {
+	const child = (
+		<span role="img" aria-label={label}>
+			{text}
+		</span>
+	);
 
-		return showTooltip ? <Tooltip label={label}>{child}</Tooltip> : child;
-	}
-);
+	return showTooltip ? (
+		<Tooltip
+			content={label}
+			color="neutral"
+			variant="flat"
+			backdropVariant="blur"
+			showArrow>
+			{child}
+		</Tooltip>
+	) : (
+		child
+	);
+};

@@ -1,17 +1,9 @@
-import { BoxProps, Center, ChakraProps, forwardRef } from "@chakra-ui/react";
-import type { ReactNode } from "react";
+import type { PropsWithChildren } from "react";
 
-import { Container } from "./Container";
-
-interface SectionProps extends ChakraProps {
+interface SectionProps extends PropsWithChildren {
 	full?: boolean;
-	children?: ReactNode;
 }
 
-export const Section = forwardRef<BoxProps, "div">(
-	({ full, children, ...rest }: SectionProps, ref) => (
-		<Center as="section" width="100%" ref={ref} {...rest}>
-			{full ? children : <Container>{children}</Container>}
-		</Center>
-	)
+export const Section = ({ children }: SectionProps) => (
+	<section className="container mx-auto max-w-6xl">{children}</section>
 );

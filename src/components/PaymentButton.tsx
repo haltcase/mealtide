@@ -1,4 +1,4 @@
-import { Box, Button, Text } from "@chakra-ui/react";
+import { Button } from "@nextui-org/react";
 import { IoLogoVenmo } from "react-icons/io5";
 
 import { Person } from "../models/Person";
@@ -23,18 +23,12 @@ export const PaymentButton = ({
 			target="_blank"
 			rel="noreferrer"
 			size="sm"
-			rightIcon={
-				<Box as="span">
+			startIcon={
+				<span>
 					<IoLogoVenmo size={22} />
-				</Box>
+				</span>
 			}
-			backgroundColor="blue.100"
-			color="blue.700"
-			_hover={{
-				backgroundColor: "blue.200"
-			}}>
-			<Text as="span" fontWeight="normal">
-				pay
-			</Text>
+			color="primary">
+			<span className="font-normal">pay</span>
 		</Button>
 	);

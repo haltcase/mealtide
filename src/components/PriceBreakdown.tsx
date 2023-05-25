@@ -1,19 +1,10 @@
 import {
+	Button,
 	Divider,
-	Flex,
-	forwardRef,
-	IconButton,
 	Popover,
-	PopoverArrow,
-	PopoverBody,
-	PopoverCloseButton,
 	PopoverContent,
-	PopoverHeader,
-	PopoverTrigger,
-	Spacer,
-	Stack,
-	Text
-} from "@chakra-ui/react";
+	PopoverTrigger
+} from "@nextui-org/react";
 import { TbInfoCircle } from "react-icons/tb";
 
 import { Person } from "../models/Person";
@@ -32,13 +23,12 @@ interface PriceItemProps {
 	amount: DomNumber;
 }
 
-const PriceItem = forwardRef(({ label, amount }: PriceItemProps, ref) => (
-	<Flex direction="row" ref={ref}>
-		<Text>{label}</Text>
-		<Spacer />
-		<Text>${toDoubleString(amount)}</Text>
-	</Flex>
-));
+const PriceItem = ({ label, amount }: PriceItemProps) => (
+	<div className="flex flex-row justify-between">
+		<p>{label}</p>
+		<p>${toDoubleString(amount)}</p>
+	</div>
+);
 
 export const PriceBreakdown = ({
 	state,
@@ -52,34 +42,33 @@ export const PriceBreakdown = ({
 	return (
 		<Popover>
 			<PopoverTrigger>
-				<IconButton aria-label="Show details" size="xs" variant="ghost" isRound>
+				<Button
+					aria-label="Show details"
+					size="xs"
+					variant="light"
+					radius="full"
+					isIconOnly>
 					<TbInfoCircle size={18} />
-				</IconButton>
+				</Button>
 			</PopoverTrigger>
-			<PopoverContent color="white" backgroundColor="teal.800">
-				<PopoverArrow backgroundColor="teal.800" />
-				<PopoverCloseButton />
 
-				<PopoverHeader paddingTop={4} fontWeight="bold" border={0}>
-					Order details for {person.name}
-				</PopoverHeader>
+			<PopoverContent className="rounded-lg bg-gradient-to-br from-primary-100 to-secondary-100 px-4 shadow-lg">
+				<div className="flex flex-col pb-4">
+					<p className="pb-2 pt-4 font-bold">Order details for {person.name}</p>
 
-				<PopoverBody paddingBottom={4}>
-					<Stack direction="column">
-						<PriceItem label="Base" amount={person.amount} />
+					<PriceItem label="Base" amount={person.amount} />
 
-						{!isEmptyTree(person.subitems) && (
-							<PriceItem label="Other items" amount={addonSubtotal} />
-						)}
+					{!isEmptyTree(person.subitems) && (
+						<PriceItem label="Other items" amount={addonSubtotal} />
+					)}
 
-						<PriceItem label="Tax" amount={tax} />
-						<PriceItem label="Fees" amount={chargeSplit} />
+					<PriceItem label="Tax" amount={tax} />
+					<PriceItem label="Fees" amount={chargeSplit} />
 
-						<Divider />
+					<Divider className="my-2" />
 
-						<PriceItem label="Total" amount={total} />
-					</Stack>
-				</PopoverBody>
+					<PriceItem label="Total" amount={total} />
+				</div>
 			</PopoverContent>
 		</Popover>
 	);

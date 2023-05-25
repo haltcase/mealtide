@@ -1,6 +1,7 @@
-import type { useToast } from "@chakra-ui/react";
+// TODO
+type ShowToastPlaceholder = (...args: unknown[]) => unknown;
 
-export const copyUrl = (showToast: ReturnType<typeof useToast>): void => {
+export const copyUrl = (showToast: ShowToastPlaceholder): void => {
 	navigator.clipboard
 		.writeText(document.location.toString())
 		.then(() =>
@@ -14,7 +15,7 @@ export const copyUrl = (showToast: ReturnType<typeof useToast>): void => {
 		);
 };
 
-export const share = (showToast: ReturnType<typeof useToast>) => {
+export const share = (showToast: ShowToastPlaceholder) => {
 	if (!navigator.share) {
 		showToast({
 			description: "Your browser doesn't support sharing content",

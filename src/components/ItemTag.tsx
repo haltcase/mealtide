@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, IconButton, Tooltip } from "@chakra-ui/react";
+import { Button, ButtonGroup, Tooltip } from "@nextui-org/react";
 import { TbPencil, TbTrash } from "react-icons/tb";
 
 import { Item } from "../models/Item";
@@ -23,9 +23,9 @@ export const ItemTag = <T extends Item>({
 	// changes (e.g., when the item is edited); without this, the target for item
 	// editors gets mismatched or lost
 	// see: https://reactjs.org/docs/reconciliation.html#keys
-	<ButtonGroup size="sm" isAttached key={item.name}>
-		<Tooltip label={title} placement="bottom-start">
-			<Button as="span" colorScheme="blue">{`$${toDoubleString(
+	<ButtonGroup size="sm" key={item.name}>
+		<Tooltip content={title} placement="bottom-start">
+			<Button color="primary" as="span">{`$${toDoubleString(
 				parseDomFloat(item.amount) +
 					(item.name.toLowerCase() === "tip"
 						? 0
@@ -33,34 +33,25 @@ export const ItemTag = <T extends Item>({
 			)}`}</Button>
 		</Tooltip>
 
-		<Button as="span" borderRadius={0}>
+		<Button className="bg-primary-100" as="span" radius="none">
 			{item.name}
 		</Button>
 
 		<ItemEditor
 			trigger={
-				<IconButton
-					aria-label="Edit"
-					backgroundColor="blue.50"
-					color="blue.600"
-					borderRadius={0}>
+				<Button aria-label="Edit" color="primary" radius="none" isIconOnly>
 					<TbPencil size={16} />
-				</IconButton>
+				</Button>
 			}
 			item={item}
 			isEdit={true}
 			onSubmit={item => onSubmit(item)}
 		/>
 
-		<Tooltip label={`Remove this ${getItemTypeDisplayName(item)}`}>
-			<IconButton
-				aria-label="Remove"
-				backgroundColor="red.50"
-				color="red.600"
-				borderLeftRadius={0}
-				onClick={() => onRemove(item)}>
+		<Tooltip content={`Remove this ${getItemTypeDisplayName(item)}`}>
+			<Button aria-label="Remove" color="danger" onClick={() => onRemove(item)}>
 				<TbTrash size={16} />
-			</IconButton>
+			</Button>
 		</Tooltip>
 	</ButtonGroup>
 );

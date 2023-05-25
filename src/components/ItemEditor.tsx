@@ -1,32 +1,13 @@
 import {
-	Box,
 	Button,
-	ButtonGroup,
-	FormControl,
-	FormLabel,
 	Input,
-	InputGroup,
-	InputLeftAddon,
-	NumberDecrementStepper,
-	NumberIncrementStepper,
-	NumberInput,
-	NumberInputField,
-	NumberInputStepper,
 	Popover,
-	PopoverArrow,
-	PopoverBody,
-	PopoverCloseButton,
 	PopoverContent,
-	PopoverFooter,
-	PopoverHeader,
 	PopoverTrigger,
-	Portal,
-	Stack,
-	Tooltip,
 	useDisclosure
-} from "@chakra-ui/react";
+} from "@nextui-org/react";
 import produce from "immer";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { TbCurrencyDollar, TbTag } from "react-icons/tb";
 
 import { Item, ItemFactory } from "../models/Item";
@@ -72,6 +53,7 @@ export const ItemEditor = <T extends Item>({
 	const [name, setName] = useState(actualItem.name);
 	const [amount, setAmount] = useState(actualItem.amount);
 	const [isChanged, setIsChanged] = useState(false);
+	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	const isValid = isItemValid({ type: actualItem.type, name, amount });
 
@@ -80,8 +62,6 @@ export const ItemEditor = <T extends Item>({
 	useEffect(() => {
 		setIsChanged(name !== item.name || amount !== actualItem.amount);
 	}, [name, amount]);
-
-	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	const submitChanges = () => {
 		if (!isValid) {
@@ -103,122 +83,78 @@ export const ItemEditor = <T extends Item>({
 		onClose();
 	};
 
-	const initialFocusRef = useRef<HTMLInputElement>(null);
-
 	return (
 		<Popover
 			isOpen={isOpen}
-			onOpen={onOpen}
-			onClose={onClose}
-			initialFocusRef={initialFocusRef}
-			isLazy
-			lazyBehavior="unmount">
-			<PopoverTrigger>
-				<Box width="fit-content">
-					<Tooltip
-						aria-label={actionDescription}
-						placement="bottom"
-						label={actionDescription}>
-						{trigger}
-					</Tooltip>
-				</Box>
-			</PopoverTrigger>
+			onOpenChange={open => (open ? onOpen() : onClose())}
+			showArrow>
+			<PopoverTrigger>{trigger}</PopoverTrigger>
 
-			<Portal>
-				<PopoverContent>
-					<PopoverArrow />
-					<PopoverCloseButton />
+			<PopoverContent className="rounded-lg bg-gradient-to-br from-primary-100 to-secondary-200 px-4 shadow-lg">
+				<div className="flex flex-col gap-2">
+					<p className="pt-4 font-bold">{actionDescription}</p>
 
-					<PopoverHeader paddingTop={4} fontWeight="bold" border={0}>
-						{actionDescription}
-					</PopoverHeader>
+					{hasSuggestions && (
+						<datalist id={`${actualItem.type}-suggestions`}>
+							{suggestions.map(suggestion => (
+								<option value={suggestion} key={suggestion}></option>
+							))}
+						</datalist>
+					)}
 
-					<PopoverBody paddingBottom={4}>
-						<Stack direction="column">
-							<FormControl isRequired>
-								<FormLabel htmlFor="name">Name</FormLabel>
+					<Input
+						className="text-foreground"
+						id="name"
+						type="text"
+						label="Name"
+						placeholder={placeholder}
+						value={name}
+						startContent={<TbTag className="text-primary" />}
+						autoComplete="off"
+						list={hasSuggestions ? `${actualItem.type}-suggestions` : undefined}
+						onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) =>
+							e.key === "Enter" && submitChanges()
+						}
+						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+							setName(capitalize(e.target.value))
+						}
+					/>
 
-								<InputGroup>
-									<InputLeftAddon pointerEvents="none">
-										<TbTag />
-									</InputLeftAddon>
+					<Input
+						className="text-foreground"
+						id="amount"
+						type="number"
+						label="Amount"
+						startContent={<TbCurrencyDollar className="text-primary" />}
+						width="100%"
+						placeholder="10.99"
+						min={0}
+						precision={2}
+						step={0.1}
+						value={amount}
+						onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) =>
+							e.key === "Enter" && submitChanges()
+						}
+						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+							setAmount(e.target.value)
+						}
+					/>
 
-									<Input
-										id="name"
-										type="text"
-										placeholder={placeholder}
-										value={name}
-										ref={initialFocusRef}
-										autoComplete="off"
-										list={
-											hasSuggestions
-												? `${actualItem.type}-suggestions`
-												: undefined
-										}
-										onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) =>
-											e.key === "Enter" && submitChanges()
-										}
-										onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-											setName(capitalize(e.target.value))
-										}
-									/>
+					<div className="flex flex-row justify-end gap-2 py-4">
+						<Button size="sm" onClick={onClose}>
+							Cancel
+						</Button>
 
-									{hasSuggestions && (
-										<datalist id={`${actualItem.type}-suggestions`}>
-											{suggestions.map(suggestion => (
-												<option value={suggestion} key={suggestion}></option>
-											))}
-										</datalist>
-									)}
-								</InputGroup>
-							</FormControl>
-
-							<FormControl isRequired>
-								<FormLabel htmlFor="amount">Amount</FormLabel>
-
-								<InputGroup>
-									<InputLeftAddon pointerEvents="none">
-										<TbCurrencyDollar />
-									</InputLeftAddon>
-
-									<NumberInput
-										id="amount"
-										width="100%"
-										placeholder="10.99"
-										min={0}
-										precision={2}
-										step={0.1}
-										value={amount}
-										onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) =>
-											e.key === "Enter" && submitChanges()
-										}
-										onChange={(value: string) => setAmount(value)}>
-										<NumberInputField borderLeftRadius={0} />
-										<NumberInputStepper>
-											<NumberIncrementStepper />
-											<NumberDecrementStepper />
-										</NumberInputStepper>
-									</NumberInput>
-								</InputGroup>
-							</FormControl>
-						</Stack>
-					</PopoverBody>
-
-					<PopoverFooter display="flex" justifyContent="end">
-						<ButtonGroup size="sm">
-							<Button colorScheme="red" onClick={onClose}>
-								Cancel
-							</Button>
-							<Button
-								colorScheme="green"
-								disabled={!canSubmit}
-								onClick={submitChanges}>
-								{actionType}
-							</Button>
-						</ButtonGroup>
-					</PopoverFooter>
-				</PopoverContent>
-			</Portal>
+						<Button
+							color="success"
+							size="sm"
+							isDisabled={!canSubmit}
+							onClick={submitChanges}>
+							{actionType}
+						</Button>
+					</div>
+				</div>
+			</PopoverContent>
 		</Popover>
 	);
 };

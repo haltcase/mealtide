@@ -1,22 +1,14 @@
-import { Center, Text } from "@chakra-ui/react";
-
 import { Emoji } from "./Emoji";
 
 export const Footer = (): JSX.Element => (
-	<Center
-		as="footer"
-		flexDirection="column"
-		backgroundColor="teal.600"
-		color="white"
-		paddingTop={4}
-		paddingBottom={24}>
-		<Text>Created by Bo Lingen, 2022</Text>
-		<Text>
+	<footer className="flex flex-col items-center pb-24 pt-4 text-white">
+		<p>Created by Bo Lingen, 2022</p>
+		<p>
 			Powered by <Emoji text="🍩" label="donuts" showTooltip /> and{" "}
 			<Emoji text="☕" label="coffee" showTooltip />
-		</Text>
-		<Text>
+		</p>
+		<p>
 			... and also <Emoji text="🔌" label="electricity" showTooltip />
-		</Text>
-	</Center>
+		</p>
+	</footer>
 );
