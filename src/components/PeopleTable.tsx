@@ -1,21 +1,15 @@
 import {
+	Button,
 	ButtonGroup,
-	Flex,
-	forwardRef,
-	IconButton,
 	Spacer,
-	Stack,
 	Table,
-	TableContainer,
-	Tbody,
-	Td,
-	Text,
-	Tfoot,
-	Th,
-	Thead,
-	Tooltip,
-	Tr
-} from "@chakra-ui/react";
+	TableBody,
+	TableCell,
+	TableColumn,
+	TableHeader,
+	TableRow,
+	Tooltip
+} from "@nextui-org/react";
 import { TbPencil, TbPlus, TbTrash } from "react-icons/tb";
 import { Updater } from "use-immer";
 
@@ -35,172 +29,154 @@ interface PeopleTableProps {
 	hasVenmo: boolean;
 }
 
-export const PeopleTable = forwardRef(
-	({ state, onStateChange, hasVenmo }: PeopleTableProps, ref) => {
-		const submitAddon = (person: Person, addon: Addon): void => {
-			onStateChange(state => {
-				state.people[person.name].subitems[addon.name] = addon;
-			});
-		};
+export const PeopleTable = ({
+	state,
+	onStateChange,
+	hasVenmo
+}: PeopleTableProps) => {
+	const submitAddon = (person: Person, addon: Addon): void => {
+		onStateChange(state => {
+			state.people[person.name].subitems[addon.name] = addon;
+		});
+	};
 
-		const removeAddon = (person: Person, addon: Addon): void =>
-			onStateChange(state => {
-				delete state.people[person.name].subitems[addon.name];
-			});
+	const removeAddon = (person: Person, addon: Addon): void =>
+		onStateChange(state => {
+			delete state.people[person.name].subitems[addon.name];
+		});
 
-		return (
-			<TableContainer ref={ref}>
-				<Table colorScheme="gray">
-					<Thead>
-						<Tr>
-							<Th>Item</Th>
-							<Th isNumeric>Total</Th>
-						</Tr>
-					</Thead>
+	const rows = Object.values(state.people).reverse();
 
-					<Tbody>
-						{Object.values(state.people)
-							.reverse()
-							.map(person => (
-								<Tr key={person.name}>
-									<Td width={{ base: "50%", md: "75%" }}>
-										<Flex
-											gap={2}
-											alignItems={{ base: "start", md: "center" }}
-											direction={{ base: "column", md: "row" }}>
-											<Text as="span">{person.name}</Text>
+	return (
+		<Table
+			classNames={{
+				th: "bg-primary/25 text-black/90 text-sm uppercase"
+			}}
+			aria-label="Items in this order"
+			isStriped
+			removeWrapper
+			bottomContent={
+				<div className="flex w-fit flex-col self-end pr-4">
+					<span className="font-bold">Grand Total</span>
+					<PriceLevel
+						price={Object.values(state.people).reduce(
+							(previous, current) =>
+								previous + getPriceDetails(state, current).total,
+							0
+						)}
+					/>
+				</div>
+			}>
+			<TableHeader>
+				<TableColumn>Item</TableColumn>
+				<TableColumn>Total</TableColumn>
+			</TableHeader>
 
-											<Spacer />
+			<TableBody items={rows}>
+				{person => (
+					<TableRow key={person.name}>
+						<TableCell>
+							<div className="flex flex-col items-start justify-between gap-2 md:flex-row md:items-center">
+								<span>{person.name}</span>
 
-											<ButtonGroup size="sm" isAttached>
-												<ItemEditor
-													key={person.name}
-													trigger={
-														<IconButton
-															aria-label="Add another item"
-															borderRightRadius={0}
-															backgroundColor="blue.100"
-															color="blue.700">
-															<TbPlus />
-														</IconButton>
-													}
-													title="Add another item"
-													item={createAddon}
-													isEdit={false}
-													onSubmit={item => {
-														submitAddon(person, item);
-													}}
-												/>
+								<Spacer />
 
-												<ItemEditor
-													key={person.name}
-													trigger={
-														<IconButton
-															aria-label="Edit this item"
-															borderRadius={0}
-															backgroundColor="blue.50"
-															color="blue.600">
-															<TbPencil />
-														</IconButton>
-													}
-													item={person}
-													isEdit={true}
-													onSubmit={item =>
-														onStateChange(state => {
-															delete state.people[person.name];
-															state.people[item.name] = item;
-														})
-													}
-												/>
-
-												<Tooltip
-													key={person.name}
-													label="Remove this item"
-													placement="bottom-start">
-													<IconButton
-														aria-label="Remove this item"
-														borderLeftRadius={0}
-														backgroundColor="red.50"
-														color="red.600"
-														onClick={() =>
-															onStateChange(state => {
-																delete state.people[person.name];
-															})
-														}>
-														<TbTrash />
-													</IconButton>
-												</Tooltip>
-											</ButtonGroup>
-										</Flex>
-
-										{Object.keys(person.subitems).length > 0 && (
-											<Flex flexWrap="wrap" marginTop={2} rowGap={2}>
-												{Object.values(person.subitems)
-													.reverse()
-													.map(addon => (
-														<ItemTag
-															title={`This is an addon item for ${person.name}`}
-															item={addon}
-															key={addon.name}
-															onRemove={item => removeAddon(person, item)}
-															onSubmit={item => {
-																removeAddon(person, addon);
-																submitAddon(person, item);
-															}}
-														/>
-													))}
-											</Flex>
-										)}
-									</Td>
-
-									<Td>
-										<Flex direction="row" alignItems="center">
-											<Stack
-												direction="column"
-												spacing={4}
-												height="fit-content"
-												width="full"
-												marginRight={2}>
-												<PriceLevel
-													fontWeight="bold"
-													color="teal.400"
-													price={getPriceDetails(state, person).total}
-												/>
-
-												<PaymentButton
-													state={state}
-													person={person}
-													disabled={!hasVenmo}
-												/>
-											</Stack>
-
-											<PriceBreakdown state={state} person={person} />
-										</Flex>
-									</Td>
-								</Tr>
-							))}
-					</Tbody>
-					<Tfoot>
-						<Tr>
-							<Td></Td>
-							<Td>
-								<Stack direction="column">
-									<Text fontWeight="bold">Grand Total</Text>
-									<PriceLevel
-										fontWeight="bold"
-										color="teal.400"
-										price={Object.values(state.people).reduce(
-											(previous, current) =>
-												previous + getPriceDetails(state, current).total,
-											0
-										)}
+								<ButtonGroup size="sm">
+									<ItemEditor
+										key={`${person.name}-add`}
+										trigger={
+											<Button
+												aria-label="Add another item"
+												color="primary"
+												isIconOnly>
+												<TbPlus />
+											</Button>
+										}
+										title="Add another item"
+										item={createAddon}
+										isEdit={false}
+										onSubmit={item => {
+											submitAddon(person, item);
+										}}
 									/>
-								</Stack>
-							</Td>
-						</Tr>
-					</Tfoot>
-				</Table>
-			</TableContainer>
-		);
-	}
-);
+
+									<ItemEditor
+										key={`${person.name}-edit`}
+										trigger={
+											<Button
+												aria-label="Edit this item"
+												color="primary"
+												isIconOnly>
+												<TbPencil />
+											</Button>
+										}
+										item={person}
+										isEdit={true}
+										onSubmit={item =>
+											onStateChange(state => {
+												delete state.people[person.name];
+												state.people[item.name] = item;
+											})
+										}
+									/>
+
+									<Tooltip
+										key={`${person.name}-remove`}
+										content="Remove this item"
+										placement="bottom-start">
+										<Button
+											aria-label="Remove this item"
+											color="danger"
+											isIconOnly
+											onClick={() =>
+												onStateChange(state => {
+													delete state.people[person.name];
+												})
+											}>
+											<TbTrash />
+										</Button>
+									</Tooltip>
+								</ButtonGroup>
+							</div>
+
+							{Object.keys(person.subitems).length > 0 && (
+								<div className="mt-2 flex flex-row flex-wrap gap-2">
+									{Object.values(person.subitems)
+										.reverse()
+										.map(addon => (
+											<ItemTag
+												title={`This is an addon item for ${person.name}`}
+												item={addon}
+												key={addon.name}
+												onRemove={item => removeAddon(person, item)}
+												onSubmit={item => {
+													removeAddon(person, addon);
+													submitAddon(person, item);
+												}}
+											/>
+										))}
+								</div>
+							)}
+						</TableCell>
+
+						<TableCell>
+							<div className="flex flex-row items-center">
+								<div className="mr-2 flex h-fit w-full flex-col gap-4">
+									<PriceLevel price={getPriceDetails(state, person).total} />
+
+									<PaymentButton
+										state={state}
+										person={person}
+										disabled={!hasVenmo}
+									/>
+								</div>
+
+								<PriceBreakdown state={state} person={person} />
+							</div>
+						</TableCell>
+					</TableRow>
+				)}
+			</TableBody>
+		</Table>
+	);
+};

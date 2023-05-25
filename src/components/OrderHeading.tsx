@@ -1,17 +1,10 @@
-import {
-	ChakraProps,
-	Input,
-	InputGroup,
-	InputLeftAddon,
-	InputRightAddon,
-	Stack
-} from "@chakra-ui/react";
+import { Input } from "@nextui-org/react";
 import { SiVenmo } from "react-icons/si";
 import { TbAt, TbNote } from "react-icons/tb";
 
 import { capitalize } from "../utilities/helpers";
 
-interface OrderHeadingProps extends ChakraProps {
+interface OrderHeadingProps {
 	orderTitle: string;
 	venmoUsername: string;
 	onOrderTitleChange: (newOrderTitle: string) => void;
@@ -22,41 +15,29 @@ export const OrderHeading = ({
 	orderTitle,
 	venmoUsername,
 	onOrderTitleChange,
-	onVenmoUsernameChange,
-	...rest
+	onVenmoUsernameChange
 }: OrderHeadingProps): JSX.Element => (
-	<Stack direction={["column", "column", "row"]} spacing={4} {...rest}>
-		<InputGroup>
-			<InputLeftAddon>
-				<TbNote size={22} />
-			</InputLeftAddon>
+	<div className="flex flex-col gap-4 md:flex-row">
+		<Input
+			classNames={{}}
+			startContent={<TbNote size={22} />}
+			aria-label="Name of restaurant"
+			placeholder="What are we getting?"
+			value={orderTitle}
+			onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+				onOrderTitleChange(capitalize(e.target.value))
+			}
+		/>
 
-			<Input
-				type="text"
-				placeholder="What are we getting?"
-				value={orderTitle}
-				onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-					onOrderTitleChange(capitalize(e.target.value))
-				}
-			/>
-		</InputGroup>
-
-		<InputGroup>
-			<InputLeftAddon>
-				<TbAt size={22} className="" />
-			</InputLeftAddon>
-
-			<Input
-				type="text"
-				placeholder="Username"
-				value={venmoUsername}
-				onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-					onVenmoUsernameChange(e.target.value)
-				}
-			/>
-			<InputRightAddon>
-				<SiVenmo size={48} />
-			</InputRightAddon>
-		</InputGroup>
-	</Stack>
+		<Input
+			startContent={<TbAt size={22} className="" />}
+			endContent={<SiVenmo size={48} />}
+			aria-label="Venmo Username"
+			placeholder="Username"
+			value={venmoUsername}
+			onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+				onVenmoUsernameChange(e.target.value)
+			}
+		/>
+	</div>
 );

@@ -1,4 +1,6 @@
-import { ButtonGroup, Flex, HStack, Text, VStack } from "@chakra-ui/react";
+"use client";
+
+import { ButtonGroup, Navbar, NavbarBrand } from "@nextui-org/react";
 import {
 	TbArrowBackUp,
 	TbArrowForwardUp,
@@ -8,8 +10,7 @@ import {
 } from "react-icons/tb";
 
 import { goBack, goForward } from "../utilities/history";
-import { copyUrl, share } from "../utilities/sharing";
-import { useToast } from "../utilities/toasts";
+// import { copyUrl, share } from "../utilities/sharing";
 import { Emoji } from "./Emoji";
 import { ToolbarAction } from "./ToolbarAction";
 
@@ -17,62 +18,47 @@ interface NavProps {
 	onReset: React.MouseEventHandler<HTMLButtonElement>;
 }
 
-export const Nav = (props: NavProps): JSX.Element => {
-	const toast = useToast();
-
+export const Nav = ({ onReset }: NavProps): JSX.Element => {
 	return (
-		<VStack
-			as="header"
-			align="flex-start"
-			position="fixed"
-			top={0}
-			width="100%"
-			spacing={0}
-			zIndex={100}
-			backgroundColor="teal.600"
-			color="white">
-			<Flex as="nav">
-				<HStack
-					fontSize="3xl"
-					fontWeight="light"
-					marginLeft={2}
-					userSelect="none">
-					<Emoji as="div" text="🍔" label="burger" />
-					<Text as="div" marginLeft={2}>
-						mealtide
-					</Text>
-				</HStack>
-			</Flex>
+		<header className="fixed top-0 z-50 flex w-full flex-col">
+			<Navbar className="sm:border-b-0" maxWidth="xl" height="auto">
+				<NavbarBrand className="-mt-1 h-10 select-none gap-2 text-3xl font-light sm:h-16">
+					<div>
+						<Emoji text="🍔" label="burger" />
+					</div>
+					<p>mealtide</p>
+				</NavbarBrand>
+			</Navbar>
 
-			<HStack
-				width="100%"
-				justify="center"
-				backgroundColor="teal.50"
-				marginTop={0}>
-				<ButtonGroup variant="ghost" colorScheme="teal" isAttached>
-					<ToolbarAction
-						name="New"
-						icon={TbNewSection}
-						onClick={props.onReset}
-					/>
-					<ToolbarAction name="Undo" icon={TbArrowBackUp} onClick={goBack} />
-					<ToolbarAction
-						name="Redo"
-						icon={TbArrowForwardUp}
-						onClick={goForward}
-					/>
-					<ToolbarAction
-						name="Copy link"
-						icon={TbLink}
-						onClick={() => copyUrl(toast)}
-					/>
-					<ToolbarAction
-						name="Share"
-						icon={TbShare}
-						onClick={() => share(toast)}
-					/>
-				</ButtonGroup>
-			</HStack>
-		</VStack>
+			<Navbar
+				className="fixed bottom-0 top-[initial] border-t sm:relative sm:border-t-0"
+				classNames={{
+					wrapper: "px-0"
+				}}
+				maxWidth="xl"
+				height="auto">
+				<div className="flex h-12 w-full flex-row justify-center">
+					<ButtonGroup className="max-sm:w-full max-sm:py-1" variant="light">
+						<ToolbarAction name="New" icon={TbNewSection} onClick={onReset} />
+						<ToolbarAction name="Undo" icon={TbArrowBackUp} onClick={goBack} />
+						<ToolbarAction
+							name="Redo"
+							icon={TbArrowForwardUp}
+							onClick={goForward}
+						/>
+						<ToolbarAction
+							name="Copy link"
+							icon={TbLink}
+							// onClick={() => copyUrl(toast)}
+						/>
+						<ToolbarAction
+							name="Share"
+							icon={TbShare}
+							// onClick={() => share(toast)}
+						/>
+					</ButtonGroup>
+				</div>
+			</Navbar>
+		</header>
 	);
 };

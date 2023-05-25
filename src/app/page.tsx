@@ -1,21 +1,13 @@
 "use client";
 
-import {
-	Alert,
-	AlertDescription,
-	Box,
-	Button,
-	Divider,
-	Flex,
-	Stack
-} from "@chakra-ui/react";
+import "./globals.css";
+
+import { Button, Card, CardBody, Divider } from "@nextui-org/react";
 import { NextPage } from "next";
-import Head from "next/head";
 import { useEffect, useRef, useState } from "react";
 import { TbPlus } from "react-icons/tb";
 import { useImmer } from "use-immer";
 
-import { Footer } from "@/components/Footer";
 import { ItemEditor } from "@/components/ItemEditor";
 import { ItemHeading } from "@/components/ItemHeading";
 import { ItemTag } from "@/components/ItemTag";
@@ -29,7 +21,7 @@ import { createPerson, Person } from "@/models/Person";
 import { SerializableState } from "@/models/SerializableState";
 import { isEmptyTree } from "@/utilities/helpers";
 import { getStateFromUrl, saveStateToUrl } from "@/utilities/history";
-import { useToast } from "@/utilities/toasts";
+// import { useToast } from "@/utilities/toasts";
 
 const App: NextPage = () => {
 	const [dataState, setDataState] = useImmer<SerializableState>({
@@ -43,7 +35,7 @@ const App: NextPage = () => {
 
 	const isInternalHistoryChange = useRef(false);
 
-	const toast = useToast();
+	// const toast = useToast();
 
 	const updateStateFromUrl = (event?: PopStateEvent) => {
 		console.log("updateState", event);
@@ -54,7 +46,7 @@ const App: NextPage = () => {
 			isInternalHistoryChange.current = true;
 		}
 
-		const data = getStateFromUrl(toast);
+		const data = getStateFromUrl();
 
 		if (isEmptyTree(dataState) && isEmptyTree(data)) {
 			return;
@@ -130,26 +122,10 @@ const App: NextPage = () => {
 	};
 
 	return (
-		<Box justifyItems={"center"} minHeight="100vh" backgroundColor="teal.600">
-			<Head>
-				<title>mealtide</title>
-				<meta
-					name="viewport"
-					content="width=device-width, initial-scale=1, shrink-to-fit=no"
-				/>
-				<meta name="theme-color" content="#00947e" />
-				{/* <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-				<link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" /> */}
-			</Head>
-
+		<div className="min-h-screen bg-gradient-to-b from-primary-100 to-neutral-100">
 			<Nav onReset={reset} />
 
-			<Stack
-				as="main"
-				paddingTop={32}
-				paddingBottom={20}
-				spacing={8}
-				backgroundColor="white">
+			<main className="space-y-8 px-4 pb-20 pt-16 sm:pt-32">
 				<Section>
 					<OrderHeading
 						orderTitle={dataState.orderTitle}
@@ -164,7 +140,7 @@ const App: NextPage = () => {
 				</Section>
 
 				<Section>
-					<Stack spacing={6}>
+					<div className="flex flex-col gap-6">
 						<ItemHeading
 							title="Party Charges"
 							subtitle="e.g., delivery or service fees to be split evenly"
@@ -172,7 +148,7 @@ const App: NextPage = () => {
 
 						<ItemEditor
 							trigger={
-								<Button size="sm" leftIcon={<TbPlus />}>
+								<Button className="w-fit" size="sm" startIcon={<TbPlus />}>
 									Add a charge
 								</Button>
 							}
@@ -183,11 +159,7 @@ const App: NextPage = () => {
 						/>
 
 						{!isEmptyTree(dataState.charges) && (
-							<Flex
-								direction="row-reverse"
-								justifyContent="start"
-								wrap="wrap"
-								gap={2}>
+							<div className="flex flex-row-reverse flex-wrap justify-end gap-2">
 								{Object.values(dataState.charges).map(charge => (
 									<ItemTag
 										title={
@@ -204,9 +176,9 @@ const App: NextPage = () => {
 										}
 									/>
 								))}
-							</Flex>
+							</div>
 						)}
-					</Stack>
+					</div>
 				</Section>
 
 				<Section>
@@ -214,10 +186,10 @@ const App: NextPage = () => {
 				</Section>
 
 				<Section>
-					<Stack direction="column" spacing={6}>
+					<div className="flex flex-col gap-6">
 						<ItemEditor
 							trigger={
-								<Button size="sm" leftIcon={<TbPlus />}>
+								<Button className="w-fit" size="sm" startIcon={<TbPlus />}>
 									Add an item
 								</Button>
 							}
@@ -227,13 +199,11 @@ const App: NextPage = () => {
 						/>
 
 						{isEmptyTree(dataState.people) ? (
-							<Alert
-								marginTop={8}
-								paddingY={6}
-								backgroundColor="teal.50"
-								color="teal.700">
-								<AlertDescription>Add items to get started</AlertDescription>
-							</Alert>
+							<Card className="mt-8 py-2">
+								<CardBody className="text-sm text-foreground/80">
+									Add items to get started
+								</CardBody>
+							</Card>
 						) : (
 							<PeopleTable
 								state={dataState}
@@ -241,12 +211,12 @@ const App: NextPage = () => {
 								hasVenmo={hasVenmo}
 							/>
 						)}
-					</Stack>
+					</div>
 				</Section>
-			</Stack>
+			</main>
 
-			<Footer />
-		</Box>
+			{/* <Footer /> */}
+		</div>
 	);
 };
 

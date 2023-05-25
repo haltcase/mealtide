@@ -1,16 +1,9 @@
 "use client";
 
-import { CacheProvider } from "@chakra-ui/next-js";
-import { ChakraProvider, cookieStorageManager } from "@chakra-ui/react";
-
-import theme from "@/theme";
+import { NextUIProvider } from "@nextui-org/react";
 
 const Providers = ({ children }: { children: React.ReactNode }) => (
-	<CacheProvider>
-		<ChakraProvider colorModeManager={cookieStorageManager} theme={theme}>
-			{children}
-		</ChakraProvider>
-	</CacheProvider>
+	<NextUIProvider>{children}</NextUIProvider>
 );
 
 export default Providers;
