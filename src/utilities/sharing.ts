@@ -16,6 +16,7 @@ export const copyUrl = (showToast: ShowToastPlaceholder): void => {
 };
 
 export const share = (showToast: ShowToastPlaceholder) => {
+	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 	if (!navigator.share) {
 		showToast({
 			description: "Your browser doesn't support sharing content",

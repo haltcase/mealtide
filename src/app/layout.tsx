@@ -1,4 +1,4 @@
-import { cn } from "@nextui-org/theme";
+import { cn } from "@nextui-org/react";
 
 import { firaCode, inter, lora } from "@/theme/fonts";
 
@@ -10,20 +10,22 @@ interface RootLayoutProps {
 
 export const metadata = {
 	title: "mealtide",
-	themeColor: "#00947e",
-	viewport: {
-		width: "device-width",
-		initialScale: 1,
-		viewportFit: "cover"
-	},
 	manifest: "/manifest.json"
+};
+
+export const viewport = {
+	themeColor: "#00947e",
+	width: "device-width",
+	initialScale: 1,
+	viewportFit: "cover"
 };
 
 const RootLayout = ({ children }: RootLayoutProps) => {
 	return (
 		<html
 			lang="en"
-			className={cn(inter.variable, lora.variable, firaCode.variable)}>
+			className={cn(inter.variable, lora.variable, firaCode.variable)}
+		>
 			<head />
 			<body>
 				<noscript>You need to enable JavaScript to run this app.</noscript>

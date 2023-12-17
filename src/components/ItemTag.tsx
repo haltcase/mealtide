@@ -1,7 +1,7 @@
 import { Button, ButtonGroup, Tooltip } from "@nextui-org/react";
 import { TbPencil, TbTrash } from "react-icons/tb";
 
-import { Item } from "../models/Item";
+import type { Item } from "../models/Item";
 import { getTax, toDoubleString } from "../utilities/calc";
 import { getItemTypeDisplayName, parseDomFloat } from "../utilities/helpers";
 import { ItemEditor } from "./ItemEditor";
@@ -45,11 +45,19 @@ export const ItemTag = <T extends Item>({
 			}
 			item={item}
 			isEdit={true}
-			onSubmit={item => onSubmit(item)}
+			onSubmit={(newItem) => {
+				onSubmit(newItem);
+			}}
 		/>
 
 		<Tooltip content={`Remove this ${getItemTypeDisplayName(item)}`}>
-			<Button aria-label="Remove" color="danger" onClick={() => onRemove(item)}>
+			<Button
+				aria-label="Remove"
+				color="danger"
+				onClick={() => {
+					onRemove(item);
+				}}
+			>
 				<TbTrash size={16} />
 			</Button>
 		</Tooltip>

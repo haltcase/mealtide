@@ -1,8 +1,8 @@
 import { Button } from "@nextui-org/react";
 import { IoLogoVenmo } from "react-icons/io5";
 
-import { Person } from "../models/Person";
-import { SerializableState } from "../models/SerializableState";
+import type { Person } from "../models/Person";
+import type { SerializableState } from "../models/SerializableState";
 import { getPaymentUrl } from "../utilities/venmo";
 
 interface PaymentButtonProps {

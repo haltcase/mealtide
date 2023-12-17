@@ -18,11 +18,10 @@ export const getPaymentUrl = (
 
 	let orderNote = "Order for ";
 
-	if (state.orderTitle.trim() != "") {
-		orderNote += state.orderTitle;
-	} else {
-		orderNote += new Date().toLocaleDateString();
-	}
+	orderNote +=
+		state.orderTitle.trim() === ""
+			? new Date().toLocaleDateString()
+			: state.orderTitle;
 
 	orderNote += `: $${toDoubleString(subtotal)} plus $${toDoubleString(
 		tax

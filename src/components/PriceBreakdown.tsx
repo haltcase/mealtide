@@ -7,9 +7,9 @@ import {
 } from "@nextui-org/react";
 import { TbInfoCircle } from "react-icons/tb";
 
-import { Person } from "../models/Person";
-import { SerializableState } from "../models/SerializableState";
-import { DomNumber } from "../models/types";
+import type { Person } from "../models/Person";
+import type { SerializableState } from "../models/SerializableState";
+import type { DomNumber } from "../models/types";
 import { getPriceDetails, toDoubleString } from "../utilities/calc";
 import { isEmptyTree } from "../utilities/helpers";
 

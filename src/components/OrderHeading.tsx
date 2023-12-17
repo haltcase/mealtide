@@ -24,9 +24,9 @@ export const OrderHeading = ({
 			aria-label="Name of restaurant"
 			placeholder="What are we getting?"
 			value={orderTitle}
-			onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-				onOrderTitleChange(capitalize(e.target.value))
-			}
+			onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+				onOrderTitleChange(capitalize(event.target.value));
+			}}
 		/>
 
 		<Input
@@ -35,9 +35,9 @@ export const OrderHeading = ({
 			aria-label="Venmo Username"
 			placeholder="Username"
 			value={venmoUsername}
-			onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-				onVenmoUsernameChange(e.target.value)
-			}
+			onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+				onVenmoUsernameChange(event.target.value);
+			}}
 		/>
 	</div>
 );
