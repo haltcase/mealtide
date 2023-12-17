@@ -1,7 +1,7 @@
 import { compressToURI, decompressFromURI } from "lz-ts";
-import { MutableRefObject } from "react";
+import type { MutableRefObject } from "react";
 
-import { SerializableState } from "../models/SerializableState";
+import type { SerializableState } from "../models/SerializableState";
 import { isEmptyTree } from "./helpers";
 
 export const goBack = (): void => {
@@ -15,13 +15,15 @@ export const goForward = (): void => {
 const serializationKey = "save";
 
 export const getStateFromUrl = (): SerializableState | null => {
-	console.log("getStateFromUrl");
-	const params = new URLSearchParams(document.location.search);
+	// console.log("getStateFromUrl");
+	const parameters = new URLSearchParams(document.location.search);
 
-	if (params.has(serializationKey)) {
+	if (parameters.has(serializationKey)) {
 		try {
-			return JSON.parse(decompressFromURI(params.get(serializationKey) ?? ""));
-		} catch (error) {
+			return JSON.parse(
+				decompressFromURI(parameters.get(serializationKey) ?? "")
+			) as SerializableState;
+		} catch {
 			// showToast({
 			// 	description: "Could not load data from URL",
 			// 	status: "error"
@@ -36,7 +38,7 @@ export const saveStateToUrl = (
 	data: SerializableState,
 	isInternalRef: MutableRefObject<boolean>
 ): void => {
-	console.log("saveStateToUrl", data, isInternalRef.current);
+	// console.log("saveStateToUrl", data, isInternalRef.current);
 	// prevent history changes if this is an internal event
 	// this maintains forward/backward state
 	if (isInternalRef.current) {
@@ -44,13 +46,13 @@ export const saveStateToUrl = (
 		return;
 	}
 
-	const previousPath = "/" + window.location.search;
+	const previousPath = `/${window.location.search}`;
 	let newPath = window.location.pathname;
 
 	if (!isEmptyTree(data)) {
-		const params = new URLSearchParams();
-		params.set(serializationKey, compressToURI(JSON.stringify(data)));
-		newPath += "?" + params.toString();
+		const parameters = new URLSearchParams();
+		parameters.set(serializationKey, compressToURI(JSON.stringify(data)));
+		newPath += `?${parameters.toString()}`;
 	}
 
 	if (newPath !== previousPath) {

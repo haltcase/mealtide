@@ -5,14 +5,14 @@ export const isItemValid = (item: Item): boolean =>
 	item.name !== "" && item.amount !== "" && item.amount != null;
 
 export const capitalize = (text: string): string =>
-	text === "" ? text : text[0].toLocaleUpperCase() + text.substring(1);
+	text === "" ? text : text[0].toLocaleUpperCase() + text.slice(1);
 
 export const getItemTypeDisplayName = (item: Item): string =>
 	({
 		Person: "item",
 		PartyCharge: "charge",
 		Addon: "addon"
-	}[item.type]);
+	})[item.type];
 
 export const parseDomFloat = (amount: DomNumber): number =>
 	typeof amount === "string" ? Number.parseFloat(amount) : amount ?? 0;
@@ -23,14 +23,14 @@ export const isPlainObject = (value: unknown): boolean => {
 		return false;
 	}
 
-	const prototype = Object.getPrototypeOf(value);
+	const prototype = Object.getPrototypeOf(value) as unknown;
 	return prototype === null || prototype === Object.prototype;
 };
 
 /**
  * Recurse through an object and return `true` if all it contains
  * are empty objects. Otherwise, return `false`.
- * @param object
+ * @param object -
  */
 export const isEmptyTree = (object: object | null | undefined): boolean => {
 	if (object == null) {
@@ -44,10 +44,10 @@ export const isEmptyTree = (object: object | null | undefined): boolean => {
 		return true;
 	}
 
-	for (let i = 0; i < keyCount; i++) {
-		const key = keys[i];
+	for (let index = 0; index < keyCount; index++) {
+		const key = keys[index];
 		// @ts-expect-error - we don't need to care about this
-		const value = object[key];
+		const value = object[key] as object | null | undefined;
 
 		if (!isPlainObject(value) || !isEmptyTree(value)) {
 			return false;

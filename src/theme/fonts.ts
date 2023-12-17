@@ -1,4 +1,4 @@
-import { Fira_Code, Inter, Lora } from "next/font/google";
+import { Fira_Code as FiraCode, Inter, Lora } from "next/font/google";
 
 export const inter = Inter({
 	subsets: ["latin"],
@@ -10,7 +10,7 @@ export const lora = Lora({
 	variable: "--font-lora"
 });
 
-export const firaCode = Fira_Code({
+export const firaCode = FiraCode({
 	subsets: ["latin"],
 	variable: "--font-firacode"
 });

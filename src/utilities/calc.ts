@@ -6,7 +6,7 @@ import { parseDomFloat } from "./helpers";
 // TODO: currently this is hardcoded to the MN tax rate,
 // but should be configurable; since all of us using this app
 // are in MN at the moment, this is low priority
-export const tax = 0.07525;
+export const tax = 0.075_25;
 
 export const getTax = (amount: number): number => amount * tax;
 

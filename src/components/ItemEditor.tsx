@@ -6,11 +6,11 @@ import {
 	PopoverTrigger,
 	useDisclosure
 } from "@nextui-org/react";
-import produce from "immer";
+import { produce } from "immer";
 import { useEffect, useState } from "react";
 import { TbCurrencyDollar, TbTag } from "react-icons/tb";
 
-import { Item, ItemFactory } from "../models/Item";
+import type { Item, ItemFactory } from "../models/Item";
 import {
 	capitalize,
 	getItemTypeDisplayName,
@@ -69,7 +69,7 @@ export const ItemEditor = <T extends Item>({
 		}
 
 		onSubmit(
-			produce(actualItem, state => {
+			produce(actualItem, (state) => {
 				state.name = name;
 				state.amount = amount;
 			})
@@ -86,8 +86,11 @@ export const ItemEditor = <T extends Item>({
 	return (
 		<Popover
 			isOpen={isOpen}
-			onOpenChange={open => (open ? onOpen() : onClose())}
-			showArrow>
+			onOpenChange={(open) => {
+				open ? onOpen() : onClose();
+			}}
+			showArrow
+		>
 			<PopoverTrigger>{trigger}</PopoverTrigger>
 
 			<PopoverContent className="rounded-lg bg-gradient-to-br from-primary-100 to-secondary-200 px-4 shadow-lg">
@@ -96,7 +99,7 @@ export const ItemEditor = <T extends Item>({
 
 					{hasSuggestions && (
 						<datalist id={`${actualItem.type}-suggestions`}>
-							{suggestions.map(suggestion => (
+							{suggestions.map((suggestion) => (
 								<option value={suggestion} key={suggestion}></option>
 							))}
 						</datalist>
@@ -112,12 +115,12 @@ export const ItemEditor = <T extends Item>({
 						startContent={<TbTag className="text-primary" />}
 						autoComplete="off"
 						list={hasSuggestions ? `${actualItem.type}-suggestions` : undefined}
-						onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) =>
-							e.key === "Enter" && submitChanges()
-						}
-						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-							setName(capitalize(e.target.value))
-						}
+						onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+							event.key === "Enter" && submitChanges();
+						}}
+						onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+							setName(capitalize(event.target.value));
+						}}
 					/>
 
 					<Input
@@ -131,13 +134,13 @@ export const ItemEditor = <T extends Item>({
 						min={0}
 						precision={2}
 						step={0.1}
-						value={amount}
-						onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) =>
-							e.key === "Enter" && submitChanges()
-						}
-						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-							setAmount(e.target.value)
-						}
+						value={String(amount)}
+						onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+							event.key === "Enter" && submitChanges();
+						}}
+						onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+							setAmount(event.target.value);
+						}}
 					/>
 
 					<div className="flex flex-row justify-end gap-2 py-4">
@@ -149,7 +152,8 @@ export const ItemEditor = <T extends Item>({
 							color="success"
 							size="sm"
 							isDisabled={!canSubmit}
-							onClick={submitChanges}>
+							onClick={submitChanges}
+						>
 							{actionType}
 						</Button>
 					</div>

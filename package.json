@@ -1,62 +1,59 @@
 {
 	"name": "mealtide",
-	"private": true,
 	"version": "1.0.0",
-	"homepage": "https://mealtide.bolingen.me",
+	"private": true,
 	"description": "App to help figure out splits for lunch (or other) orders.",
 	"keywords": [],
-	"packageManager": "^pnpm@8.5.0",
-	"engines": {
-		"node": "18"
-	},
+	"homepage": "https://mealtide.bolingen.me",
 	"scripts": {
-		"dev": "next dev",
-		"start": "next start",
 		"build": "next build",
-		"format": "eslint --fix src && prettier --write src"
-	},
-	"dependencies": {
-		"@nextui-org/react": "0.0.0-dev-v2-20230521141624",
-		"@nextui-org/shared-utils": "0.0.0-dev-v2-20230521141624",
-		"@nextui-org/theme": "0.0.0-dev-v2-20230521141624",
-		"@nextui-org/use-is-mobile": "0.0.0-dev-v2-20230521141624",
-		"clsx": "^1.2.1",
-		"framer-motion": "^6",
-		"immer": "9.0.14",
-		"lz-ts": "1.1.2",
-		"next": "^13.4.1",
-		"next-pwa": "^5.6.0",
-		"react": "18.2.0",
-		"react-dom": "18.2.0",
-		"react-icons": "4.4.0",
-		"tailwind-merge": "^1.12.0",
-		"tailwindcss-animate": "^1.0.5",
-		"use-immer": "0.7.0"
-	},
-	"devDependencies": {
-		"@next/eslint-plugin-next": "^13.4.3",
-		"@types/next-pwa": "^5.6.2",
-		"@types/node": "^20.2.1",
-		"@types/react": "^18.2.6",
-		"@types/react-dom": "^18.2.4",
-		"@typescript-eslint/eslint-plugin": "^5.59.6",
-		"@typescript-eslint/parser": "^5.59.6",
-		"eslint": "^8.41.0",
-		"eslint-config-prettier": "^8.8.0",
-		"eslint-plugin-react": "^7.32.2",
-		"eslint-plugin-simple-import-sort": "^10.0.0",
-		"postcss-flexbugs-fixes": "^5.0.2",
-		"postcss-import": "^15.1.0",
-		"postcss-preset-env": "^8.4.1",
-		"prettier": "^2.8.8",
-		"prettier-plugin-tailwindcss": "^0.3.0",
-		"tailwindcss": "^3.3.2",
-		"typescript": "^5.0.4"
+		"dev": "next dev",
+		"format": "eslint --fix src && prettier --write src",
+		"start": "next start"
 	},
 	"browserslist": [
 		">0.2%",
 		"not dead",
 		"not ie <= 11",
 		"not op_mini all"
-	]
+	],
+	"prettier": "@haltcase/style/prettier",
+	"dependencies": {
+		"@nextui-org/react": "2.2.9",
+		"@nextui-org/shared-utils": "2.0.4",
+		"@nextui-org/theme": "2.1.17",
+		"@nextui-org/use-is-mobile": "2.0.6",
+		"clsx": "^2.0.0",
+		"framer-motion": "^10",
+		"immer": "10.0.3",
+		"lz-ts": "1.1.2",
+		"next": "^14.0.4",
+		"next-pwa": "^5.6.0",
+		"react": "18.2.0",
+		"react-dom": "18.2.0",
+		"react-icons": "4.12.0",
+		"tailwind-merge": "^2.1.0",
+		"tailwindcss-animate": "^1.0.7",
+		"use-immer": "0.9.0"
+	},
+	"devDependencies": {
+		"@haltcase/style": "^6.0.0",
+		"@next/eslint-plugin-next": "^14.0.4",
+		"@types/next-pwa": "^5.6.9",
+		"@types/node": "^20.10.4",
+		"@types/react": "^18.2.45",
+		"@types/react-dom": "^18.2.18",
+		"eslint": "^8.56.0",
+		"postcss-flexbugs-fixes": "^5.0.2",
+		"postcss-import": "^15.1.0",
+		"postcss-preset-env": "^9.3.0",
+		"prettier": "^3.1.1",
+		"prettier-plugin-tailwindcss": "^0.5.9",
+		"tailwindcss": "^3.3.6",
+		"typescript": "^5.3.3"
+	},
+	"packageManager": "^pnpm@8.12.0",
+	"engines": {
+		"node": "20"
+	}
 }
