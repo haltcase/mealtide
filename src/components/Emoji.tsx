@@ -18,12 +18,7 @@ export const Emoji = ({
 	);
 
 	return showTooltip ? (
-		<Tooltip
-			content={label}
-			color="neutral"
-			variant="flat"
-			backdropVariant="blur"
-			showArrow>
+		<Tooltip content={label} showArrow>
 			{child}
 		</Tooltip>
 	) : (

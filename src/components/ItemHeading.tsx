@@ -17,13 +17,20 @@ export const ItemHeading = (props: ItemHeadingProps): JSX.Element => {
 			<Tooltip content={props.subtitle} isOpen={isTooltipOpen}>
 				<Button
 					className="text-md"
-					size="xs"
+					size="sm"
 					radius="full"
 					isIconOnly
 					title={props.subtitle}
-					onMouseEnter={() => { setIsTooltipOpen(true); }}
-					onMouseLeave={() => { setIsTooltipOpen(false); }}
-					onClick={() => { setIsTooltipOpen(true); }}>
+					onMouseEnter={() => {
+						setIsTooltipOpen(true);
+					}}
+					onMouseLeave={() => {
+						setIsTooltipOpen(false);
+					}}
+					onClick={() => {
+						setIsTooltipOpen(true);
+					}}
+				>
 					<TbInfoCircle />
 				</Button>
 			</Tooltip>

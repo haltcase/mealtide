@@ -9,6 +9,7 @@ export interface Item {
 	notes?: string;
 }
 
-export interface ItemFactory<T extends Item> {
-	(name?: string, amount?: DomNumber): T;
-}
+export type ItemFactory<T extends Item> = (
+	name?: string,
+	amount?: DomNumber
+) => T;

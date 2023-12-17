@@ -1,6 +1,6 @@
-import { PartyCharge } from "./PartyCharge";
-import { Person } from "./Person";
-import { ItemRecord } from "./types";
+import type { PartyCharge } from "./PartyCharge";
+import type { Person } from "./Person";
+import type { ItemRecord } from "./types";
 
 export interface SerializableState {
 	orderTitle: string;
