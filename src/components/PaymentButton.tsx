@@ -23,12 +23,13 @@ export const PaymentButton = ({
 			target="_blank"
 			rel="noreferrer"
 			size="sm"
-			startIcon={
+			startContent={
 				<span>
 					<IoLogoVenmo size={22} />
 				</span>
 			}
-			color="primary">
+			color="primary"
+		>
 			<span className="font-normal">pay</span>
 		</Button>
 	);

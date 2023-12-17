@@ -44,10 +44,11 @@ export const PriceBreakdown = ({
 			<PopoverTrigger>
 				<Button
 					aria-label="Show details"
-					size="xs"
+					size="sm"
 					variant="light"
 					radius="full"
-					isIconOnly>
+					isIconOnly
+				>
 					<TbInfoCircle size={18} />
 				</Button>
 			</PopoverTrigger>

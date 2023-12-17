@@ -50,14 +50,14 @@ export const getPriceDetails = (
 ): PriceDetails => {
 	const addonSubtotal = getTotalCharges(person.subitems);
 	const subtotal = parseDomFloat(person.amount) + addonSubtotal;
-	const tax = getTax(subtotal);
+	const taxAmount = getTax(subtotal);
 	const chargeSplit = getChargeSplit(state);
-	const total = subtotal + tax + chargeSplit;
+	const total = subtotal + taxAmount + chargeSplit;
 
 	return {
 		addonSubtotal,
 		subtotal,
-		tax,
+		tax: taxAmount,
 		chargeSplit,
 		total
 	};

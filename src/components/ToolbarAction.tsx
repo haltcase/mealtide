@@ -13,12 +13,13 @@ export const ToolbarAction = (props: ToolbarActionProps): JSX.Element => {
 		<Tooltip className="sm:hidden" content={props.name}>
 			<Button
 				className="text-md mx-0 h-full px-2 data-[hover=true]:bg-transparent max-sm:w-full sm:mx-2"
-				startIcon={
+				startContent={
 					<div className="h-5/6 sm:h-1/2">
 						<props.icon size="100%" />
 					</div>
 				}
-				onClick={props.onClick}>
+				onClick={props.onClick}
+			>
 				<span className="hidden font-semibold sm:inline">{props.name}</span>
 			</Button>
 		</Tooltip>

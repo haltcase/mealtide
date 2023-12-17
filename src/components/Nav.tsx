@@ -36,7 +36,8 @@ export const Nav = ({ onReset }: NavProps): JSX.Element => {
 					wrapper: "px-0"
 				}}
 				maxWidth="xl"
-				height="auto">
+				height="auto"
+			>
 				<div className="flex h-12 w-full flex-row justify-center">
 					<ButtonGroup className="max-sm:w-full max-sm:py-1" variant="light">
 						<ToolbarAction name="New" icon={TbNewSection} onClick={onReset} />
