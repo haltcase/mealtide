@@ -3,10 +3,10 @@ import type { SerializableState } from "../models/SerializableState";
 import type { DomNumber, ItemRecord } from "../models/types";
 import { parseDomFloat } from "./helpers";
 
-// TODO: currently this is hardcoded to the MN tax rate,
+// TODO: currently this is hardcoded to (parts of) MN tax rate,
 // but should be configurable; since all of us using this app
 // are in MN at the moment, this is low priority
-export const tax = 0.07525;
+export const tax = 0.08525;
 
 export const getTax = (amount: number): number => amount * tax;
 
