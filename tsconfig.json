@@ -1,6 +1,9 @@
 {
 	"extends": "@haltcase/style/typescript/next",
 	"compilerOptions": {
+		"allowImportingTsExtensions": true,
+		"moduleResolution": "bundler",
+		"target": "ES2018",
 		"baseUrl": "src",
 		"paths": {
 			"@/*": ["./*"]
@@ -15,7 +18,8 @@
 		"**/*.mjs",
 		".*.js",
 		".eslintrc.cjs",
-		"postcss.config.cjs",
+		"next.config.ts",
+		"postcss.config.js",
 		".next/types/**/*.ts"
 	]
 }

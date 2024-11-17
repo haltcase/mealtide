@@ -1,9 +1,19 @@
 import type { PropsWithChildren } from "react";
 
-interface SectionProps extends PropsWithChildren {
+import { cx, type WithClassNames } from "@/lib/cx";
+
+interface SectionProps extends WithClassNames<"root", PropsWithChildren> {
 	full?: boolean;
 }
 
-export const Section = ({ children }: SectionProps) => (
-	<section className="container mx-auto max-w-6xl">{children}</section>
+export const Section: React.FC<SectionProps> = ({
+	children,
+	className,
+	classNames = {}
+}) => (
+	<section
+		className={cx("container mx-auto max-w-6xl", className, classNames.root)}
+	>
+		{children}
+	</section>
 );

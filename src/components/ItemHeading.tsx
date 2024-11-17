@@ -1,39 +1,34 @@
-import { Button, Tooltip } from "@nextui-org/react";
-import { useState } from "react";
+import { ActionIcon, Tooltip } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import type { PropsWithChildren } from "react";
 import { TbInfoCircle } from "react-icons/tb";
 
-interface ItemHeadingProps {
+interface ItemHeadingProps extends PropsWithChildren {
 	title: string;
 	subtitle: string;
 }
 
 export const ItemHeading = (props: ItemHeadingProps): JSX.Element => {
-	const [isTooltipOpen, setIsTooltipOpen] = useState(false);
+	const [isTooltipOpen, { open, close }] = useDisclosure();
 
 	return (
 		<div className="flex flex-row items-center gap-4">
 			<p className="text-xl font-bold">{props.title}</p>
 
-			<Tooltip content={props.subtitle} isOpen={isTooltipOpen}>
-				<Button
-					className="text-md"
-					size="sm"
-					radius="full"
-					isIconOnly
-					title={props.subtitle}
-					onMouseEnter={() => {
-						setIsTooltipOpen(true);
-					}}
-					onMouseLeave={() => {
-						setIsTooltipOpen(false);
-					}}
-					onClick={() => {
-						setIsTooltipOpen(true);
-					}}
+			<Tooltip label={props.subtitle} opened={isTooltipOpen}>
+				<ActionIcon
+					variant="subtle"
+					radius="100%"
+					aria-label={props.subtitle}
+					onMouseEnter={open}
+					onMouseLeave={close}
+					onClick={open}
 				>
-					<TbInfoCircle />
-				</Button>
+					<TbInfoCircle size="1.2rem" />
+				</ActionIcon>
 			</Tooltip>
+
+			{props.children}
 		</div>
 	);
 };

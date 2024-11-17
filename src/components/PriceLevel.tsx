@@ -5,7 +5,7 @@ interface PriceLevelProps {
 	price: DomNumber;
 }
 
-export const PriceLevel = ({ price }: PriceLevelProps) => (
+export const PriceLevel: React.FC<PriceLevelProps> = ({ price }) => (
 	<div className="flex flex-row justify-between">
 		<span>$</span>
 		<span>{toDoubleString(price)}</span>

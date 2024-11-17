@@ -1,16 +1,23 @@
-import type { Person } from "../models/Person";
-import type { SerializableState } from "../models/SerializableState";
+import type { MainStoreState } from "@/app/stores/mainStore";
+import type { FrontendLineItem } from "@/models/Item";
+
 import { getPriceDetails, toDoubleString } from "./calc";
 
 const baseUrl = "https://venmo.com";
 
 export const getPaymentUrl = (
-	state: SerializableState,
-	person: Person
+	state: MainStoreState,
+	item: FrontendLineItem
 ): string => {
-	const url = new URL(state.venmoUsername, baseUrl);
+	const { orderTitle, venmoUsername } = state;
 
-	const { subtotal, tax, chargeSplit, total } = getPriceDetails(state, person);
+	if (!venmoUsername) {
+		return "";
+	}
+
+	const url = new URL(venmoUsername, baseUrl);
+
+	const { subtotal, tax, chargeSplit, total } = getPriceDetails(state, item);
 
 	url.searchParams.append("txn", "pay");
 	url.searchParams.append("audience", "private");
@@ -19,9 +26,7 @@ export const getPaymentUrl = (
 	let orderNote = "Order for ";
 
 	orderNote +=
-		state.orderTitle.trim() === ""
-			? new Date().toLocaleDateString()
-			: state.orderTitle;
+		orderTitle.trim() === "" ? new Date().toLocaleDateString() : orderTitle;
 
 	orderNote += `: $${toDoubleString(subtotal)} plus $${toDoubleString(
 		tax

@@ -1,4 +1,4 @@
-import { Tooltip } from "@nextui-org/react";
+import { Tooltip } from "@mantine/core";
 
 interface EmojiProps {
 	text: string;
@@ -6,11 +6,11 @@ interface EmojiProps {
 	showTooltip?: boolean;
 }
 
-export const Emoji = ({
+export const Emoji: React.FC<EmojiProps> = ({
 	label,
 	text,
 	showTooltip = false
-}: EmojiProps): JSX.Element => {
+}) => {
 	const child = (
 		<span role="img" aria-label={label}>
 			{text}
@@ -18,7 +18,7 @@ export const Emoji = ({
 	);
 
 	return showTooltip ? (
-		<Tooltip content={label} showArrow>
+		<Tooltip label={label} withArrow>
 			{child}
 		</Tooltip>
 	) : (

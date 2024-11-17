@@ -1,11 +1,10 @@
-"use strict";
-
-module.exports = {
+export default {
 	plugins: {
-		tailwindcss: {},
-		"tailwindcss/nesting": "postcss-nesting",
-		"postcss-flexbugs-fixes": {},
 		"postcss-import": {},
+		"postcss-flexbugs-fixes": {},
+		"tailwindcss/nesting": "postcss-nesting",
+		tailwindcss: {},
+		"postcss-preset-mantine": {},
 		"postcss-preset-env": {
 			browsers: ["defaults"],
 			autoprefixer: {
@@ -15,7 +14,8 @@ module.exports = {
 			features: {
 				"custom-properties": true,
 				"custom-selectors": true,
-				"nesting-rules": true
+				// let tailwind handle nesting
+				"nesting-rules": false
 			}
 		}
 	}

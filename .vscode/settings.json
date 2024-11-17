@@ -1,6 +1,22 @@
 {
+	"search.exclude": {
+		"package-lock.json": true,
+		"pnpm-lock.yaml": true
+	},
 	"typescript.tsdk": "node_modules\\typescript\\lib",
 	"files.associations": {
 		"*.css": "tailwindcss"
-	}
+	},
+	"javascript.preferences.importModuleSpecifier": "non-relative",
+	"tailwindCSS.classAttributes": [
+		"class",
+		"className",
+		"classNames",
+		"ngClass",
+		".*Styles*",
+		".*ClassName",
+		"clsx\\(([^)]*)\\)",
+		"cx\\(([^)]*)\\)",
+		"(?:'|\"|`)([^']*)(?:'|\"|`)"
+	]
 }

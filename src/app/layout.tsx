@@ -1,8 +1,12 @@
-import { cn } from "@nextui-org/react";
+import "@/app/globals.css";
+import "@mantine/core/styles.layer.css";
+import "@mantine/notifications/styles.layer.css";
 
+import { ColorSchemeScript } from "@mantine/core";
+
+import { Providers } from "@/app/providers/RootProviders";
+import { cx } from "@/lib/cx";
 import { firaCode, inter, lora } from "@/theme/fonts";
-
-import Providers from "./providers";
 
 interface RootLayoutProps {
 	children: React.ReactNode;
@@ -24,9 +28,11 @@ const RootLayout = ({ children }: RootLayoutProps) => {
 	return (
 		<html
 			lang="en"
-			className={cn(inter.variable, lora.variable, firaCode.variable)}
+			className={cx(inter.variable, lora.variable, firaCode.variable)}
 		>
-			<head />
+			<head>
+				<ColorSchemeScript />
+			</head>
 			<body>
 				<noscript>You need to enable JavaScript to run this app.</noscript>
 				<Providers>{children}</Providers>

@@ -1,4 +1,9 @@
-@tailwind base;
+@layer tailwind, mantine;
+
+@layer tailwind {
+	@tailwind base;
+}
+
 @tailwind components;
 @tailwind utilities;
 
@@ -7,5 +12,12 @@
 		font-feature-settings:
 			"rlig" 1,
 			"calt" 1;
+	}
+}
+
+@layer mantine {
+	.mantine-InputWrapper-label,
+	.mantine-InputWrapper-description {
+		font-size: inherit;
 	}
 }

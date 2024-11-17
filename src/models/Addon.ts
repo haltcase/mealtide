@@ -1,14 +1,12 @@
-import type { Item, ItemFactory } from "./Item";
-import type { ItemRecord } from "./types";
+import type { FrontendAddon, ItemFactory } from "./Item";
 
-export interface Addon extends Item {
-	type: "Addon";
-	subitems: ItemRecord<Addon>;
-}
-
-export const createAddon: ItemFactory<Addon> = (name = "", amount = "") => ({
+export const createAddon: ItemFactory<FrontendAddon> = (
+	name = "",
+	amount = "",
+	description = ""
+) => ({
 	name,
+	description,
 	amount,
-	subitems: {},
 	type: "Addon"
 });

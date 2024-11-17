@@ -1,14 +1,8 @@
-import type { Person } from "../models/Person";
-import type { SerializableState } from "../models/SerializableState";
-import type { DomNumber, ItemRecord } from "../models/types";
+import type { MainStoreState } from "@/app/stores/mainStore";
+import type { FrontendFee, FrontendLineItem } from "@/models/Item";
+
+import type { DomNumber, ItemMap } from "../models/types";
 import { parseDomFloat } from "./helpers";
-
-// TODO: currently this is hardcoded to (parts of) MN tax rate,
-// but should be configurable; since all of us using this app
-// are in MN at the moment, this is low priority
-export const tax = 0.08525;
-
-export const getTax = (amount: number): number => amount * tax;
 
 export const toDoubleString = (amount: DomNumber): string =>
 	Intl.NumberFormat("en-US", {
@@ -17,19 +11,34 @@ export const toDoubleString = (amount: DomNumber): string =>
 		maximumFractionDigits: 2
 	}).format(parseDomFloat(amount));
 
-export const getTotalCharges = (items: ItemRecord): number =>
-	Object.values(items).reduce(
-		(previous, current) =>
-			previous +
-			parseDomFloat(current.amount) +
-			(current.name.toLowerCase() === "tip"
-				? 0
-				: getTax(parseDomFloat(current.amount))),
+export const getTotalCharges = (items: ItemMap): number => {
+	return [...items.values()].reduce(
+		(previous, current) => previous + parseDomFloat(current.amount),
 		0
 	);
+};
 
-export const getChargeSplit = (data: SerializableState): number =>
-	getTotalCharges(data.charges) / Object.keys(data.people).length;
+export const getChargeSplit = (
+	fees: ItemMap<FrontendFee>,
+	partyCount: number
+): number => getTotalCharges(fees) / partyCount;
+
+export const calculateProportion = (
+	state: MainStoreState,
+	item: FrontendLineItem,
+	total: number
+) => {
+	const otherItemsTotal = state.lineItems
+		.entries()
+		.filter(([_key, value]) => item.name !== value.name)
+		.reduce(
+			(_previous, [_key, value]) =>
+				parseDomFloat(value.amount) + getTotalCharges(value.subitems),
+			0
+		);
+
+	return total / (total + otherItemsTotal);
+};
 
 interface PriceDetails {
 	/** Subtotal of all items & addons */
@@ -45,19 +54,21 @@ interface PriceDetails {
 }
 
 export const getPriceDetails = (
-	state: SerializableState,
-	person: Person
+	state: MainStoreState,
+	item: FrontendLineItem
 ): PriceDetails => {
-	const addonSubtotal = getTotalCharges(person.subitems);
-	const subtotal = parseDomFloat(person.amount) + addonSubtotal;
-	const taxAmount = getTax(subtotal);
-	const chargeSplit = getChargeSplit(state);
-	const total = subtotal + taxAmount + chargeSplit;
+	const { fees, lineItems, taxAmount } = state;
+
+	const addonSubtotal = getTotalCharges(item.subitems);
+	const subtotal = parseDomFloat(item.amount) + addonSubtotal;
+	const taxSplitAmount = taxAmount * calculateProportion(state, item, subtotal);
+	const chargeSplit = getChargeSplit(fees, lineItems.size);
+	const total = subtotal + taxSplitAmount + chargeSplit;
 
 	return {
 		addonSubtotal,
 		subtotal,
-		tax: taxAmount,
+		tax: taxSplitAmount,
 		chargeSplit,
 		total
 	};

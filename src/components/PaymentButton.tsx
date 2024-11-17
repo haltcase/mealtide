@@ -1,29 +1,30 @@
-import { Button } from "@nextui-org/react";
+import { Button } from "@mantine/core";
 import { IoLogoVenmo } from "react-icons/io5";
 
-import type { Person } from "../models/Person";
-import type { SerializableState } from "../models/SerializableState";
+import { useMainStore } from "@/app/providers/MainStoreProvider";
+import type { FrontendLineItem } from "@/models/Item";
+
 import { getPaymentUrl } from "../utilities/venmo";
 
 interface PaymentButtonProps {
-	state: SerializableState;
-	person: Person;
-	disabled?: boolean;
+	item: FrontendLineItem;
 }
 
-export const PaymentButton = ({
-	state,
-	person,
-	disabled
-}: PaymentButtonProps): JSX.Element | null =>
-	disabled ? null : (
+export const PaymentButton: React.FC<PaymentButtonProps> = ({ item }) => {
+	const [state] = useMainStore();
+
+	if (!state.venmoUsername) {
+		return null;
+	}
+
+	return (
 		<Button
-			as="a"
-			href={getPaymentUrl(state, person)}
+			component="a"
+			href={getPaymentUrl(state, item)}
 			target="_blank"
 			rel="noreferrer"
 			size="sm"
-			startContent={
+			leftSection={
 				<span>
 					<IoLogoVenmo size={22} />
 				</span>
@@ -33,3 +34,4 @@ export const PaymentButton = ({
 			<span className="font-normal">pay</span>
 		</Button>
 	);
+};
