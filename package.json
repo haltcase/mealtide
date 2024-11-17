@@ -35,7 +35,7 @@
 		"superjson": "^2.2.1",
 		"tailwind-merge": "^2.5.4",
 		"tailwindcss-animate": "^1.0.7",
-		"zundo": "^2.2.0",
+		"zundo": "^2.3.0",
 		"zustand": "^4.5.5"
 	},
 	"devDependencies": {

@@ -1,11 +1,11 @@
 "use client";
 
 import { createContext, type ReactNode, useContext, useRef } from "react";
-// import type { TemporalState } from "zundo";
+import type { TemporalState } from "zundo";
 import { useStore } from "zustand";
+import { useStoreWithEqualityFn } from "zustand/traditional";
 
-// import { useStoreWithEqualityFn } from "zustand/traditional";
-import type { MainStore /*,  StoreState */ } from "@/app/stores/mainStore";
+import type { MainStore, MainStoreState } from "@/app/stores/mainStore";
 import { createMainStore } from "@/app/stores/mainStore";
 
 type MainStoreInstance = ReturnType<typeof createMainStore>;
@@ -45,16 +45,18 @@ export const useMainStore = <TSelection extends unknown = MainStore>(
 	return [useStore(mainStoreContext, selector), mainStoreContext.getState];
 };
 
-// // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
-// export const useTemporalMainStore = <TSelection extends unknown>(
-// 	selector: (state: TemporalState<StoreState>) => TSelection,
-// 	equality?: (a: TSelection, b: TSelection) => boolean
-// ): TSelection => {
-// 	const mainStoreContext = useContext(MainStoreContext);
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
+export const useTemporalMainStore = <TSelection extends unknown>(
+	selector: (state: TemporalState<MainStoreState>) => TSelection,
+	equality?: (a: TSelection, b: TSelection) => boolean
+): TSelection => {
+	const mainStoreContext = useContext(MainStoreContext);
 
-// 	if (!mainStoreContext) {
-// 		throw new Error(`useTemporalMainStore must be used within MainStoreProvider`);
-// 	}
+	if (!mainStoreContext) {
+		throw new Error(
+			`useTemporalMainStore must be used within MainStoreProvider`
+		);
+	}
 
-// 	return useStoreWithEqualityFn(mainStoreContext.temporal, selector, equality);
-// };
+	return useStoreWithEqualityFn(mainStoreContext.temporal, selector, equality);
+};
