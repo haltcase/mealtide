@@ -16,6 +16,7 @@ import { queryStorage } from "./syncWithUrl";
 enableMapSet();
 
 export interface MainStoreState {
+	version: number;
 	orderTitle: string;
 	venmoUsername?: string;
 	fees: ItemMap<FrontendFee>;
@@ -41,6 +42,7 @@ export interface MainStoreActions {
 export type MainStore = MainStoreState & MainStoreActions;
 
 export const defaultInitialState = {
+	version: 2,
 	orderTitle: "",
 	fees: new Map(),
 	lineItems: new Map(),
