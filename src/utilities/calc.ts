@@ -32,8 +32,10 @@ export const calculateProportion = (
 		.entries()
 		.filter(([_key, value]) => item.name !== value.name)
 		.reduce(
-			(_previous, [_key, value]) =>
-				parseDomFloat(value.amount) + getTotalCharges(value.subitems),
+			(previous, [_key, value]) =>
+				previous +
+				parseDomFloat(value.amount) +
+				getTotalCharges(value.subitems),
 			0
 		);
 
