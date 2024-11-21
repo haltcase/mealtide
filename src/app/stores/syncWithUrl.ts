@@ -6,7 +6,7 @@ import type { MainStoreState } from "./mainStore";
 
 export const queryStorage: PersistStorage<MainStoreState> = {
 	getItem: (key) => {
-		const query = new URLSearchParams(location.hash.slice(1));
+		const query = new URLSearchParams(window.location.search);
 		const encodedData = query.get(key);
 
 		if (!encodedData) {
@@ -16,13 +16,13 @@ export const queryStorage: PersistStorage<MainStoreState> = {
 		return parse(decompressFromURI(encodedData));
 	},
 	setItem: (key, newValue) => {
-		const query = new URLSearchParams(location.hash.slice(1));
+		const query = new URLSearchParams(window.location.search);
 		query.set(key, compressToURI(stringify(newValue)));
-		location.hash = query.toString();
+		window.history.replaceState(null, "", `/?${query.toString()}`);
 	},
 	removeItem: (key) => {
-		const query = new URLSearchParams(location.hash.slice(1));
+		const query = new URLSearchParams(window.location.search);
 		query.delete(key);
-		location.hash = stringify(Object.fromEntries(query.entries()));
+		window.history.replaceState(null, "", `/?${query.toString()}`);
 	}
 };
