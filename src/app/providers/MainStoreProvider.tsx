@@ -14,15 +14,17 @@ export const MainStoreContext = createContext<MainStoreInstance | null>(null);
 
 export interface MainStoreProviderProps {
 	children: ReactNode;
+	initialState?: MainStoreState;
 }
 
 export const MainStoreProvider: React.FC<MainStoreProviderProps> = ({
-	children
+	children,
+	initialState
 }) => {
 	const storeRef = useRef<MainStoreInstance | null>(null);
 
 	if (!storeRef.current) {
-		storeRef.current = createMainStore();
+		storeRef.current = createMainStore(initialState);
 	}
 
 	return (

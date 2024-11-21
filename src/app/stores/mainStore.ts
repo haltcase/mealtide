@@ -11,7 +11,7 @@ import type {
 } from "@/models/Item";
 import type { ItemMap } from "@/models/types";
 
-import { queryStorage } from "./syncWithUrl";
+import { querySaveDataKey, queryStorage } from "./syncWithUrl";
 
 enableMapSet();
 
@@ -112,7 +112,7 @@ export const createMainStore = (initialState = defaultInitialState) =>
 				}))
 			),
 			{
-				name: "data",
+				name: querySaveDataKey,
 				storage: queryStorage
 			}
 		)
