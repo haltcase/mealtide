@@ -28,16 +28,16 @@ export const calculateProportion = (
 	item: FrontendLineItem,
 	total: number
 ) => {
-	const otherItemsTotal = state.lineItems
-		.entries()
-		.filter(([_key, value]) => item.name !== value.name)
-		.reduce(
-			(previous, [_key, value]) =>
-				previous +
-				parseDomFloat(value.amount) +
-				getTotalCharges(value.subitems),
-			0
-		);
+	let otherItemsTotal = 0;
+
+	for (const [_key, value] of state.lineItems) {
+		if (item.name === value.name) {
+			continue;
+		}
+
+		otherItemsTotal +=
+			parseDomFloat(value.amount) + getTotalCharges(value.subitems);
+	}
 
 	return total / (total + otherItemsTotal);
 };
