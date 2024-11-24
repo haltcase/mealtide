@@ -5,6 +5,7 @@
 	"description": "App to help figure out splits for lunch (or other) orders.",
 	"keywords": [],
 	"homepage": "https://mealtide.haltcase.dev",
+	"license": "MIT",
 	"type": "module",
 	"scripts": {
 		"build": "next build",
