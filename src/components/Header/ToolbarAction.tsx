@@ -21,7 +21,7 @@ export const ToolbarAction: React.FC<ToolbarActionProps> = ({
 				}}
 				variant="transparent"
 				className="mx-0 rounded-lg px-0 text-md text-primary hover:bg-primary-200 data-[disabled]:bg-transparent data-[disabled]:text-primary-300 max-sm:w-full sm:mx-2 sm:px-4 md:min-w-max"
-				leftSection={<Icon size="100%" />}
+				leftSection={<Icon className="aspect-square" size="1.25em" />}
 				{...rest}
 			>
 				{name}
