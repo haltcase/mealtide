@@ -65,7 +65,7 @@ export const getPriceDetails = (
 	const subtotal = parseDomFloat(item.amount) + addonSubtotal;
 	const taxSplitAmount = taxAmount * calculateProportion(state, item, subtotal);
 	const chargeSplit = getChargeSplit(fees, lineItems.size);
-	const total = subtotal + taxSplitAmount + chargeSplit;
+	const total = Math.max(0, subtotal + taxSplitAmount + chargeSplit);
 
 	return {
 		addonSubtotal,
