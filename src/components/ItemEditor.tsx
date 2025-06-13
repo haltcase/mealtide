@@ -113,9 +113,9 @@ export const ItemEditor = <T extends Item>({
 	return (
 		<Popover
 			classNames={{
-				arrow: "bg-gradient-to-br to-primary-100 from-secondary-200",
+				arrow: "bg-gradient-to-br from-secondary-200 to-primary-100",
 				dropdown:
-					"rounded-lg bg-gradient-to-br from-primary-100 to-secondary-200 px-4 shadow-lg border-0"
+					"rounded-lg border-0 bg-gradient-to-br from-primary-100 to-secondary-200 px-4 shadow-lg"
 			}}
 			position="bottom-start"
 			opened={isOpen}
