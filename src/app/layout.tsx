@@ -2,7 +2,7 @@ import "@/app/globals.css";
 import "@mantine/core/styles.layer.css";
 import "@mantine/notifications/styles.layer.css";
 
-import { ColorSchemeScript } from "@mantine/core";
+import { ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
 
 import { Providers } from "@/app/providers/RootProviders";
 import { cx } from "@/lib/cx";
@@ -29,6 +29,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
 		<html
 			lang="en"
 			className={cx(inter.variable, lora.variable, firaCode.variable)}
+			{...mantineHtmlProps}
 		>
 			<head>
 				<ColorSchemeScript />
