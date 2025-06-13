@@ -187,7 +187,7 @@ export const ItemEditor = <T extends Item>({
 						placeholder="10.99"
 						inputMode="decimal"
 						pattern="^(0|[1-9]\d*)?(\.\d+)?(?<=\d)$"
-						min={0}
+						min={actualItem.type === "Fee" ? undefined : 0}
 						step={0.1}
 						decimalScale={2}
 						fixedDecimalScale
