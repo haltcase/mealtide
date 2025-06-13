@@ -11,7 +11,8 @@
 		"build": "next build",
 		"dev": "next dev",
 		"eslint:check": "eslint src",
-		"format": "eslint --fix src && prettier --write src",
+		"format": "oxlint --fix && eslint --fix src && prettier --write src",
+		"oxlint:check": "oxlint",
 		"prettier:check": "prettier --check src",
 		"start": "next start",
 		"typescript:check": "tsc --noEmit && echo \"No errors reported by tsc.\""
@@ -46,6 +47,8 @@
 		"@types/react": "^18.3.12",
 		"@types/react-dom": "^18.3.1",
 		"eslint": "^9.28.0",
+		"eslint-plugin-oxlint": "^1.1.0",
+		"oxlint": "^1.1.0",
 		"postcss-flexbugs-fixes": "^5.0.2",
 		"postcss-import": "^16.1.0",
 		"postcss-preset-env": "^10.1.0",

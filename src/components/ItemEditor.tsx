@@ -72,7 +72,7 @@ export const ItemEditor = <T extends Item>({
 				description !== actualItem.description ||
 				amount !== actualItem.amount
 		);
-		// eslint-disable-next-line react-hooks/exhaustive-deps -- props should not be dependencies
+		// oxlint-disable-next-line exhaustive-deps -- props should not be dependencies
 	}, [name, description, amount]);
 
 	const submitChanges = () => {
@@ -134,7 +134,7 @@ export const ItemEditor = <T extends Item>({
 						label="Name"
 						placeholder={placeholder}
 						value={name}
-						// eslint-disable-next-line jsx-a11y/no-autofocus -- temporarily disabled for easier upgrade
+						// oxlint-disable-next-line no-autofocus
 						autoFocus
 						leftSection={<TbTag className="text-primary" />}
 						data={[
