@@ -74,6 +74,7 @@ const getPrimaryColorShades = (
 };
 
 type ColorShades = {
+	// eslint-disable-next-line @typescript-eslint/naming-convention
 	DEFAULT: string;
 	variants: ReturnType<typeof makeVariantColors>;
 } & Record<string, unknown>;
@@ -104,7 +105,6 @@ export interface MantineTailwindPluginOptions<
 	defaultColorShadeOverrides?: Partial<
 		Record<
 			keyof NonNullable<TTheme["colors"]>,
-			// eslint-disable-next-line @typescript-eslint/ban-types
 			(0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9) | (number & {})
 		>
 	>;

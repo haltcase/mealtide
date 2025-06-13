@@ -20,7 +20,7 @@ import {
 } from "../utilities/helpers";
 
 interface AddonEditorProps<T extends Item> {
-	trigger: JSX.Element;
+	trigger: React.JSX.Element;
 	item: T | ItemFactory<T>;
 	isEdit: boolean;
 	onSubmit: (item: T) => void;
@@ -41,16 +41,15 @@ export const ItemEditor = <T extends Item>({
 	title,
 	onSubmit,
 	suggestions = []
-}: AddonEditorProps<T>): JSX.Element => {
+}: AddonEditorProps<T>): React.JSX.Element => {
 	const actualItem = typeof item === "function" ? item() : item;
 	const typeDisplayName = getItemTypeDisplayName(actualItem);
 	const placeholder = placeholders[actualItem.type];
 	const actionType = isEdit ? "Update" : "Add";
 
 	const actionDescription =
-		title == null
-			? `${actionType}${actionType === "Add" ? "" : " this"} ${typeDisplayName}`
-			: title;
+		title ??
+		`${actionType}${actionType === "Add" ? "" : " this"} ${typeDisplayName}`;
 
 	const [name, setName] = useState(actualItem.name);
 	const [description, setDescription] = useState(actualItem.description);
@@ -73,6 +72,7 @@ export const ItemEditor = <T extends Item>({
 				description !== actualItem.description ||
 				amount !== actualItem.amount
 		);
+		// eslint-disable-next-line react-hooks/exhaustive-deps -- props should not be dependencies
 	}, [name, description, amount]);
 
 	const submitChanges = () => {
@@ -134,7 +134,8 @@ export const ItemEditor = <T extends Item>({
 						label="Name"
 						placeholder={placeholder}
 						value={name}
-						autoFocus={true}
+						// eslint-disable-next-line jsx-a11y/no-autofocus -- temporarily disabled for easier upgrade
+						autoFocus
 						leftSection={<TbTag className="text-primary" />}
 						data={[
 							{ group: "Choose one or enter your own", items: suggestions }

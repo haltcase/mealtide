@@ -35,7 +35,7 @@ export const ItemTable: React.FC = () => {
 		<Paper withBorder>
 			<Table
 				classNames={{
-					th: "text-black/90 text-sm uppercase",
+					th: "text-sm uppercase text-black/90",
 					tfoot: cx(
 						"border-t border-[var(--table-border-color)]",
 						// fix ugly lines near rounded corners
@@ -99,7 +99,7 @@ export const ItemTable: React.FC = () => {
 												</Tooltip>
 											}
 											item={item}
-											isEdit={true}
+											isEdit
 											onSubmit={state.setLineItem}
 										/>
 
@@ -157,7 +157,7 @@ export const ItemTable: React.FC = () => {
 
 				<TableTfoot>
 					<TableTr>
-						<TableTd></TableTd>
+						<TableTd />
 						<TableTd>
 							<div className="flex w-full flex-col justify-end pr-[calc(1rem+28px)]">
 								<span className="font-bold">Grand Total</span>

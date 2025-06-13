@@ -8,7 +8,7 @@ interface ItemHeadingProps extends PropsWithChildren {
 	subtitle: string;
 }
 
-export const ItemHeading = (props: ItemHeadingProps): JSX.Element => {
+export const ItemHeading = (props: ItemHeadingProps): React.JSX.Element => {
 	const [isTooltipOpen, { open, close }] = useDisclosure();
 
 	return (

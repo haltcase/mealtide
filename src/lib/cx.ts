@@ -6,9 +6,7 @@ export type WithClassNames<
 	TProps = unknown
 > = TProps & {
 	className?: string;
-	classNames?: {
-		[TName in TNames]+?: ClassNameValue;
-	};
+	classNames?: Partial<Record<TNames, ClassNameValue>>;
 };
 
 export const cx = (

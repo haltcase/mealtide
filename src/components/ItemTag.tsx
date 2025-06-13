@@ -18,7 +18,7 @@ interface ItemTagProps<T extends Item> {
 export const ItemTagInner = <T extends Item>(
 	{ title, item, onRemove, onSubmit }: ItemTagProps<T>,
 	ref: ForwardedRef<HTMLDivElement>
-): JSX.Element => {
+): React.JSX.Element => {
 	return (
 		// apply a `key` to this component to ensure a re-render when the item name
 		// changes (e.g., when the item is edited); without this, the target for item
@@ -51,7 +51,7 @@ export const ItemTagInner = <T extends Item>(
 					</Tooltip>
 				}
 				item={item}
-				isEdit={true}
+				isEdit
 				onSubmit={onSubmit}
 			/>
 

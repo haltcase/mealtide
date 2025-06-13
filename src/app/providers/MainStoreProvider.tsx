@@ -23,9 +23,7 @@ export const MainStoreProvider: React.FC<MainStoreProviderProps> = ({
 }) => {
 	const storeRef = useRef<MainStoreInstance | null>(null);
 
-	if (!storeRef.current) {
-		storeRef.current = createMainStore(initialState);
-	}
+	storeRef.current ??= createMainStore(initialState);
 
 	return (
 		<MainStoreContext.Provider value={storeRef.current}>

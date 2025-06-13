@@ -4,7 +4,7 @@ export const queryHeader = "x-query";
 
 export const middleware: NextMiddleware = (request) => {
 	const responseHeaders = new Headers({
-		...request.headers,
+		...Object.fromEntries(request.headers),
 		[queryHeader]: request.nextUrl.search
 	});
 
