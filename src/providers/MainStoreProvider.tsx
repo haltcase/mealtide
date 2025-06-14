@@ -5,8 +5,8 @@ import type { TemporalState } from "zundo";
 import { useStore } from "zustand";
 import { useStoreWithEqualityFn } from "zustand/traditional";
 
-import type { MainStore, MainStoreState } from "@/app/stores/mainStore";
-import { createMainStore } from "@/app/stores/mainStore";
+import type { MainStore, MainStoreState } from "@/stores/mainStore";
+import { createMainStore } from "@/stores/mainStore";
 
 type MainStoreInstance = ReturnType<typeof createMainStore>;
 

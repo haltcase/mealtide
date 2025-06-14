@@ -1,22 +1,70 @@
 {
-	"search.exclude": {
-		"package-lock.json": true,
-		"pnpm-lock.yaml": true
-	},
-	"typescript.tsdk": "node_modules\\typescript\\lib",
-	"files.associations": {
-		"*.css": "tailwindcss"
-	},
-	"javascript.preferences.importModuleSpecifier": "non-relative",
-	"tailwindCSS.classAttributes": [
-		"class",
-		"className",
-		"classNames",
-		"ngClass",
-		".*Styles*",
-		".*ClassName",
-		"clsx\\(([^)]*)\\)",
-		"cx\\(([^)]*)\\)",
-		"(?:'|\"|`)([^']*)(?:'|\"|`)"
-	]
+  "search.exclude": {
+    // Don't search lock files
+    "package-lock.json": true,
+    "pnpm-lock.yaml": true
+  },
+
+  "workbench.editor.customLabels.patterns": {
+    // Disambiguate generic filenames by including the folder name in the tab
+    "**/{page,layout,loading,error,route,template}.{jsx,tsx}": "${dirname}/${filename}",
+    "**/index.{html,js,jsx,ts,tsx}": "${dirname}/${filename}"
+  },
+
+  // General formatting
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[html][css][json][jsonc][javascript][javascriptreact][typescript][typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "always"
+  },
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+
+  // Language-specific settings,
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  },
+  "[svg]": {
+    "editor.defaultFormatter": "jock.svg"
+  },
+
+  // Prettier
+  "prettier.arrowParens": "always",
+  "prettier.bracketSpacing": true,
+  "prettier.bracketSameLine": true,
+  "prettier.printWidth": 80,
+  "prettier.semi": true,
+  "prettier.singleQuote": false,
+  "prettier.trailingComma": "none",
+  "prettier.useTabs": true,
+
+  // Use the TypeScript SDK installed locally
+  "typescript.tsdk": "node_modules/typescript/lib",
+
+  // Tailwind & CSS
+  "cssModules.camelCase": true,
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "tailwindCSS.classAttributes": [
+    "class",
+    "className",
+    "classNames",
+    "ngClass",
+    ".*Styles*",
+    ".*ClassName"
+  ],
+  "tailwindCSS.classFunctions": ["clsx", "cx", "twMerge"],
+  "tailwindCSS.experimental.classRegex": [":\\s*?[\"'`]([^\"'`]*).*?"],
+  "tailwindCSS.rootFontSize": 16,
+
+  // Stylelint
+  "stylelint.reportDescriptionlessDisables": true,
+  "stylelint.packageManager": "pnpm",
+  "stylelint.reportInvalidScopeDisables": true,
+  "stylelint.reportNeedlessDisables": true,
+  "stylelint.snippet": ["css", "postcss", "tailwindcss"],
+  "stylelint.validate": ["css", "postcss", "tailwindcss"]
 }

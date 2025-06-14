@@ -8,7 +8,7 @@ import {
 } from "@mantine/core";
 import { TbInfoCircle } from "react-icons/tb";
 
-import { useMainStore } from "@/app/providers/MainStoreProvider";
+import { useMainStore } from "@/providers/MainStoreProvider";
 import type { FrontendLineItem } from "@/models/Item";
 
 import type { DomNumber } from "../models/types";

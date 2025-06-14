@@ -12,7 +12,7 @@ import {
 import {
 	useMainStore,
 	useTemporalMainStore
-} from "@/app/providers/MainStoreProvider";
+} from "@/providers/MainStoreProvider";
 import { copyUrl, share } from "@/utilities/sharing.tsx";
 
 import { ToolbarAction } from "./ToolbarAction";

@@ -1,4 +1,4 @@
-import type { MainStoreState } from "@/app/stores/mainStore";
+import type { MainStoreState } from "@/stores/mainStore";
 import type { FrontendFee, FrontendLineItem } from "@/models/Item";
 
 import type { DomNumber, ItemMap } from "../models/types";

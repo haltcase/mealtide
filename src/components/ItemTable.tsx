@@ -15,7 +15,7 @@ import {
 } from "@mantine/core";
 import { TbPencil, TbPlus, TbTrash } from "react-icons/tb";
 
-import { useMainStore } from "@/app/providers/MainStoreProvider";
+import { useMainStore } from "@/providers/MainStoreProvider";
 import { cx } from "@/lib/cx";
 
 import { createAddon } from "../models/Addon";

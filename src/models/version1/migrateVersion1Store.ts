@@ -1,4 +1,4 @@
-import type { MainStoreState } from "@/app/stores/mainStore";
+import type { MainStoreState } from "@/stores/mainStore";
 import { parseDomFloat } from "@/utilities/helpers";
 
 import type { FrontendAddon, FrontendFee, FrontendLineItem } from "../Item";

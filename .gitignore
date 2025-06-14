@@ -17,6 +17,8 @@
 
 # production
 /build
+src/app/theme.css
+src/routeTree.gen.ts
 
 # misc
 .DS_Store

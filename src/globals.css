@@ -1,4 +1,9 @@
-@layer tailwind, mantine;
+@import "@mantine/notifications/styles.layer.css";
+@import "./theme.css";
+
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/lora";
+@import "@fontsource-variable/fira-code";
 
 @layer tailwind {
 	@tailwind base;
