@@ -1,5 +1,3 @@
-"use client";
-
 import { createContext, type ReactNode, useContext, useRef } from "react";
 import type { TemporalState } from "zundo";
 import { useStore } from "zustand";
