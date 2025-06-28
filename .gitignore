@@ -11,12 +11,10 @@
 # testing
 /coverage
 
-# next.js
-/.next/
-/out/
-
 # production
-/build
+/.nitro/
+/.output/
+/.tanstack/
 src/app/theme.css
 src/routeTree.gen.ts
 
