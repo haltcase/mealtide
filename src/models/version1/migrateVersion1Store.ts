@@ -38,7 +38,7 @@ export const migrateVersion1Store = (input: Version1Store): MainStoreState => {
 		Object.entries(input.people).map(([key, value]) => {
 			const subitems = new Map(
 				Object.entries(value.subitems).map(([subitemKey, subitemValue]) => {
-					const [name, description = ""] = subitemValue.name.split(" - ");
+					const [name = "", description = ""] = subitemValue.name.split(" - ");
 
 					return [
 						subitemKey,
@@ -52,7 +52,7 @@ export const migrateVersion1Store = (input: Version1Store): MainStoreState => {
 				})
 			);
 
-			const [name, description = ""] = value.name.split(" - ");
+			const [name = "", description = ""] = value.name.split(" - ");
 
 			return [
 				key,
