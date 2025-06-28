@@ -1,4 +1,5 @@
-import "@/globals.css";
+// TODO: Switch to a side-effect import when Start fully supports it
+import globalStyles from "@/globals.css?url";
 
 import { ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
 import {
@@ -51,10 +52,10 @@ export const Route = createRootRoute({
         rel: "manifest",
         href: "/manifest.json",
       },
-      // {
-      //   rel: "stylesheet",
-      //   href: globalStyles,
-      // },
+      {
+        rel: "stylesheet",
+        href: globalStyles,
+      }
     ],
   }),
   component: RootLayout,
