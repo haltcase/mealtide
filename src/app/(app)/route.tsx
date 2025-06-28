@@ -1,5 +1,4 @@
 import { Outlet } from "@tanstack/react-router";
-import type { PropsWithChildren } from "react";
 
 import { AppContainer } from "@/components/AppContainer";
 import { Header } from "@/components/Header/Header";
@@ -7,7 +6,7 @@ import { Header } from "@/components/Header/Header";
 import { MainStoreProvider } from "../../providers/MainStoreProvider";
 import { parseEncodedData, querySaveDataKey } from "../../stores/syncWithUrl";
 
-const AppLayout: React.FC<AppLayoutProps> = () => {
+const AppLayout: React.FC = () => {
 	const data = Route.useSearch();
 
 	return (
@@ -20,14 +19,12 @@ const AppLayout: React.FC<AppLayoutProps> = () => {
 				</main>
 			</AppContainer>
 		</MainStoreProvider>
-	);
+	)
 };
 
 export const Route = createFileRoute({
 	component: AppLayout,
 	validateSearch: (search) => {
 		return parseEncodedData((search[querySaveDataKey] as string) || "");
-	}
+	},
 });
-
-type AppLayoutProps = PropsWithChildren;
