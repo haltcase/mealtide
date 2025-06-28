@@ -5,12 +5,17 @@
 @import "@fontsource-variable/lora";
 @import "@fontsource-variable/fira-code";
 
-@layer tailwind {
-	@tailwind base;
-}
+@theme {
+	--font-sans: "Inter", sans-serif;
+	--font-serif: "Lora", serif;
+	--font-monospace: "Fira Code", monospace;
 
-@tailwind components;
-@tailwind utilities;
+	--color-primary: var(--mantine-color-primary-6);
+	--color-secondary: var(--mantine-color-secondary-8);
+	--color-success: var(--mantine-color-success-6);
+	--color-warning: var(--mantine-color-warning-4);
+	--color-danger: var(--mantine-color-danger-7);
+}
 
 @layer base {
 	body {
