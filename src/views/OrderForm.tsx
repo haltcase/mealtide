@@ -15,9 +15,9 @@ export const OrderForm: React.FC = () => {
   const [fees] = useMainStore((state) => state.fees);
   const [lineItems] = useMainStore((state) => state.lineItems);
 
-  const [[setFee, removeFee, setLineItem]] = useMainStore(
-    (state) => [state.setFee, state.removeFee, state.setLineItem] as const
-  );
+  const [setFee] = useMainStore((state) => state.setFee);
+  const [removeFee] = useMainStore((state) => state.removeFee);
+  const [setLineItem] = useMainStore((state) => state.setLineItem);
 
   return (
     <Stack gap="md">

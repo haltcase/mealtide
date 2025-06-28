@@ -12,10 +12,9 @@ export const OrderHeading: React.FC = () => {
   const [orderTitle] = useMainStore((state) => state.orderTitle);
   const [taxAmount] = useMainStore((state) => state.taxAmount);
 
-  const [[setOrderTitle, setVenmoUsername, setTaxAmount]] = useMainStore(
-    (state) =>
-      [state.setOrderTitle, state.setVenmoUsername, state.setTaxAmount] as const
-  );
+  const [setOrderTitle] = useMainStore((state) => state.setOrderTitle);
+  const [setVenmoUsername] = useMainStore((state) => state.setVenmoUsername);
+  const [setTaxAmount] = useMainStore((state) => state.setTaxAmount);
 
   return (
     <div className="flex flex-col justify-center gap-4">
@@ -46,7 +45,7 @@ export const OrderHeading: React.FC = () => {
           aria-label="Venmo Username"
           placeholder="Username"
           autoComplete="off"
-          value={venmoUsername}
+          value={venmoUsername || ""}
           onChange={(event) => {
             setVenmoUsername(event.currentTarget.value);
           }}
