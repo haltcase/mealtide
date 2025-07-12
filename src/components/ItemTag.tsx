@@ -27,14 +27,14 @@ export const ItemTagInner = <T extends Item>(
 		<ButtonGroup key={item.name} ref={ref}>
 			<Tooltip label={title} position="bottom-start">
 				<ActionIcon
-					className="cursor-help rounded-r-none pl-4 text-sm hover:bg-primary-500"
+					className="hover:bg-primary-500 cursor-help rounded-r-none pl-4 text-sm"
 					color="primary.5"
 					size="compact-md"
 				>{`$${toDoubleString(item.amount)}`}</ActionIcon>
 			</Tooltip>
 
 			<Button
-				className="cursor-default text-sm hover:bg-primary-500"
+				className="hover:bg-primary-500 cursor-default text-sm"
 				color="primary.5"
 				radius="none"
 				size="compact-md"

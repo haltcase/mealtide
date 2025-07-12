@@ -1,8 +1,8 @@
 import { Button } from "@mantine/core";
 import { IoLogoVenmo } from "react-icons/io5";
 
-import { useMainStore } from "@/providers/MainStoreProvider";
 import type { FrontendLineItem } from "@/models/Item";
+import { useMainStore } from "@/stores/mainStoreHooks.js";
 
 import { getPaymentUrl } from "../utilities/venmo";
 

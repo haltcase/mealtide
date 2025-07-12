@@ -14,17 +14,17 @@ const AppLayout: React.FC = () => {
 			<AppContainer className="pb-40">
 				<Header />
 
-				<main className="space-y-8 px-4 pb-20 pt-24 sm:pt-40">
+				<main className="space-y-8 px-4 pt-24 pb-20 sm:pt-40">
 					<Outlet />
 				</main>
 			</AppContainer>
 		</MainStoreProvider>
-	)
+	);
 };
 
 export const Route = createFileRoute({
 	component: AppLayout,
 	validateSearch: (search) => {
 		return parseEncodedData((search[querySaveDataKey] as string) || "");
-	},
+	}
 });

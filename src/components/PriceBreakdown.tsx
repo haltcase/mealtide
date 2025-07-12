@@ -8,8 +8,8 @@ import {
 } from "@mantine/core";
 import { TbInfoCircle } from "react-icons/tb";
 
-import { useMainStore } from "@/providers/MainStoreProvider";
 import type { FrontendLineItem } from "@/models/Item";
+import { useMainStore } from "@/stores/mainStoreHooks.js";
 
 import type { DomNumber } from "../models/types";
 import { getPriceDetails, toDoubleString } from "../utilities/calc";
@@ -48,9 +48,9 @@ export const PriceBreakdown: React.FC<PriceBreakdownProps> = ({ item }) => {
 				</Tooltip>
 			</PopoverTarget>
 
-			<PopoverDropdown className="rounded-lg bg-gradient-to-br from-primary-100 to-secondary-100 px-4 shadow-lg">
+			<PopoverDropdown className="from-primary-100 to-secondary-100 rounded-lg bg-gradient-to-br px-4 shadow-lg">
 				<div className="flex flex-col pb-4">
-					<p className="pb-2 pt-4 font-bold">Order details for {item.name}</p>
+					<p className="pt-4 pb-2 font-bold">Order details for {item.name}</p>
 
 					<PriceItem label="Base" amount={item.amount} />
 

@@ -14,14 +14,14 @@ const generatePrelude = (): string => `\
 `;
 
 const generateBreakpoints = (theme: MantineTheme): string => {
-  const mantineBreakpoints = Object.entries(theme.breakpoints)
-    .map(
-      ([breakpointName, breakpointValue]) =>
-        `  --breakpoint-${breakpointName}: ${breakpointValue};`
-    )
-    .join("\n");
+	const mantineBreakpoints = Object.entries(theme.breakpoints)
+		.map(
+			([breakpointName, breakpointValue]) =>
+				`  --breakpoint-${breakpointName}: ${breakpointValue};`
+		)
+		.join("\n");
 
-  return `
+	return `
 	/* Extended breakpoints for smaller displays */
 	--breakpoint-3xs: 12em; /* 192px */
 	--breakpoint-2xs: 24em; /* 384px */
@@ -39,41 +39,41 @@ ${mantineBreakpoints}
 };
 
 const generateColors = (theme: MantineTheme): string => {
-  // Default shade; can be overridden for each color in the user's CSS file
-  const defaultShadeIndex = 5;
+	// Default shade; can be overridden for each color in the user's CSS file
+	const defaultShadeIndex = 5;
 
-  return Object.entries(theme.colors)
-    .flatMap(([colorName, colorValues], colorIndex) => [
-      // Unsuffixed CSS variable for default shade
-      `${colorIndex > 0 ? "\n" : ""}  --color-${colorName}: var(--mantine-color-${colorName}-${defaultShadeIndex});`,
+	return Object.entries(theme.colors)
+		.flatMap(([colorName, colorValues], colorIndex) => [
+			// Unsuffixed CSS variable for default shade
+			`${colorIndex > 0 ? "\n" : ""}  --color-${colorName}: var(--mantine-color-${colorName}-${defaultShadeIndex});`,
 
-      // CSS variables for all shades
-      ...colorValues.map((_colorValue, shadeIndex) => {
-        const tailwindShade =
-          shadeIndex === 0 ? "50" : String(shadeIndex * 100);
+			// CSS variables for all shades
+			...colorValues.map((_colorValue, shadeIndex) => {
+				const tailwindShade =
+					shadeIndex === 0 ? "50" : String(shadeIndex * 100);
 
-        return `  --color-${colorName}-${tailwindShade}: var(--mantine-color-${colorName}-${shadeIndex});`;
-      }),
-    ])
-    .join("\n");
+				return `  --color-${colorName}-${tailwindShade}: var(--mantine-color-${colorName}-${shadeIndex});`;
+			})
+		])
+		.join("\n");
 };
 
 const generateFontSizes = (theme: MantineTheme): string => {
-  const themeFontSizes = Object.entries(theme.fontSizes)
-    .map(
-      ([fontSizeName, _fontSizeValue]) =>
-        `  --text-${fontSizeName}: var(--mantine-font-size-${fontSizeName});`
-    )
-    .join("\n");
+	const themeFontSizes = Object.entries(theme.fontSizes)
+		.map(
+			([fontSizeName, _fontSizeValue]) =>
+				`  --text-${fontSizeName}: var(--mantine-font-size-${fontSizeName});`
+		)
+		.join("\n");
 
-  const themeHeadingFontSizes = Object.entries(theme.headings.sizes)
-    .map(
-      ([headingSizeName, _headingSizeValue]) =>
-        `  --heading-${headingSizeName}: var(--mantine-${headingSizeName}-font-size);`
-    )
-    .join("\n");
+	const themeHeadingFontSizes = Object.entries(theme.headings.sizes)
+		.map(
+			([headingSizeName, _headingSizeValue]) =>
+				`  --heading-${headingSizeName}: var(--mantine-${headingSizeName}-font-size);`
+		)
+		.join("\n");
 
-  return `
+	return `
 	--text-base: var(--mantine-font-size-md);
 ${themeFontSizes}
 ${themeHeadingFontSizes}\
@@ -81,7 +81,7 @@ ${themeHeadingFontSizes}\
 };
 
 const generateResolutionUtilities = () => {
-  return `\
+	return `\
 /* Resolution utilities for high DPI displays */
 @custom-variant dpr-1 (@media (min-resolution: 1dppx));
 @custom-variant dpr-2 (@media (min-resolution: 2dppx));
@@ -95,32 +95,32 @@ const generateResolutionUtilities = () => {
 };
 
 const restoreTailwindDefaultSizeUtilities = () => {
-  const sizes = {
-    "3xs": "16rem",
-    "2xs": "18rem",
-    xs: "20rem",
-    sm: "24rem",
-    md: "28rem",
-    lg: "32rem",
-    xl: "36rem",
-    "2xl": "42rem",
-    "3xl": "48rem",
-    "4xl": "56rem",
-    "5xl": "64rem",
-    "6xl": "72rem",
-    "7xl": "80rem",
-  } as const;
+	const sizes = {
+		"3xs": "16rem",
+		"2xs": "18rem",
+		xs: "20rem",
+		sm: "24rem",
+		md: "28rem",
+		lg: "32rem",
+		xl: "36rem",
+		"2xl": "42rem",
+		"3xl": "48rem",
+		"4xl": "56rem",
+		"5xl": "64rem",
+		"6xl": "72rem",
+		"7xl": "80rem"
+	} as const;
 
-  const sizeKeys = Object.keys(sizes) as (keyof typeof sizes)[];
+	const sizeKeys = Object.keys(sizes) as (keyof typeof sizes)[];
 
-  return `
+	return `
 	/* Restore default Tailwind CSS sizing utilities */
 
 	/* See: https://github.com/tailwindlabs/tailwindcss/issues/16047 */
 
 ${Object.entries(sizes)
-  .map(([size, sizeValue]) => `  --size-${size}: ${sizeValue};`)
-  .join("\n")}
+	.map(([size, sizeValue]) => `  --size-${size}: ${sizeValue};`)
+	.join("\n")}
 
 ${sizeKeys.map((size) => `  --container-${size}: var(--size-${size});`).join("\n")}
 ${sizeKeys.map((size) => `  --width-${size}: var(--size-${size});`).join("\n")}
@@ -133,24 +133,24 @@ ${sizeKeys.map((size) => `  --max-height-${size}: var(--size-${size});`).join("\
 };
 
 interface ThemeGeneratorOptions {
-  includeDefaultColors?: boolean;
-  excludePrelude?: boolean;
+	includeDefaultColors?: boolean;
+	excludePrelude?: boolean;
 }
 
 const generateCssContents = (
-  baseTheme: MantineThemeOverride = DEFAULT_THEME,
-  options: ThemeGeneratorOptions = {}
+	baseTheme: MantineThemeOverride = DEFAULT_THEME,
+	options: ThemeGeneratorOptions = {}
 ) => {
-  const theme = mergeMantineTheme(DEFAULT_THEME, baseTheme);
+	const theme = mergeMantineTheme(DEFAULT_THEME, baseTheme);
 
-  const prelude = options.excludePrelude ? "" : generatePrelude();
-  const breakpoints = generateBreakpoints(theme);
-  const colors = generateColors(theme);
-  const fontSizes = generateFontSizes(theme);
-  const resolutionUtilities = generateResolutionUtilities();
-  const defaultSizeUtilities = restoreTailwindDefaultSizeUtilities();
+	const prelude = options.excludePrelude ? "" : generatePrelude();
+	const breakpoints = generateBreakpoints(theme);
+	const colors = generateColors(theme);
+	const fontSizes = generateFontSizes(theme);
+	const resolutionUtilities = generateResolutionUtilities();
+	const defaultSizeUtilities = restoreTailwindDefaultSizeUtilities();
 
-  return `\
+	return `\
 /* stylelint-disable -- automatically generated content */
 /* This file is automatically generated. Do not edit it manually. */
 
@@ -251,44 +251,44 @@ ${defaultSizeUtilities}
 };
 
 export const generate = task.strict(
-  {
-    outputPath: "string?",
-    watch: "boolean?",
-    excludePrelude: "boolean?",
-  },
-  async (input) => {
-    const outputPath = input.outputPath
-      ? String(input.outputPath)
-      : "./src/theme.css";
-    const outputDirectory = dirname(outputPath);
+	{
+		outputPath: "string?",
+		watch: "boolean?",
+		excludePrelude: "boolean?"
+	},
+	async (input) => {
+		const outputPath = input.outputPath
+			? String(input.outputPath)
+			: "./src/theme.css";
+		const outputDirectory = dirname(outputPath);
 
-    const run = async () => {
-      const { appTheme } = await import("../src/theme/index.js");
-      const generatedCss = generateCssContents(appTheme, {
-        excludePrelude: input.excludePrelude,
-      });
+		const run = async () => {
+			const { appTheme } = await import("../src/theme/index.js");
+			const generatedCss = generateCssContents(appTheme, {
+				excludePrelude: input.excludePrelude
+			});
 
-      await mkdir(outputDirectory, { recursive: true });
+			await mkdir(outputDirectory, { recursive: true });
 
-      await writeFile(outputPath, generatedCss, {
-        encoding: "utf8",
-        flag: "w",
-      });
+			await writeFile(outputPath, generatedCss, {
+				encoding: "utf8",
+				flag: "w"
+			});
 
-      console.log(`Generated theme CSS written to ${outputPath}`);
-    };
+			console.log(`Generated theme CSS written to ${outputPath}`);
+		};
 
-    const watchPath = resolve(import.meta.dirname, "../src/theme");
+		const watchPath = resolve(import.meta.dirname, "../src/theme");
 
-    await run();
+		await run();
 
-    if (input.watch) {
-      const watcher = watch(watchPath, {
-        ignoreInitial: true,
-        persistent: true,
-      });
+		if (input.watch) {
+			const watcher = watch(watchPath, {
+				ignoreInitial: true,
+				persistent: true
+			});
 
-      watcher.on("all", run);
-    }
-  }
+			watcher.on("all", run);
+		}
+	}
 );

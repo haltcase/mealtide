@@ -12,7 +12,7 @@ export const AppContainer: React.FC<AppContainerProps> = forwardRef(
 			<div
 				ref={ref}
 				className={cx(
-					"min-h-screen bg-gradient-to-b from-primary-100 to-neutral-100",
+					"from-primary-100 min-h-screen bg-gradient-to-b to-neutral-100",
 					className,
 					classNames.root
 				)}

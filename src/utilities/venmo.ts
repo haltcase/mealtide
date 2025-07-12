@@ -1,5 +1,5 @@
-import type { MainStoreState } from "@/stores/mainStore";
 import type { FrontendLineItem } from "@/models/Item";
+import type { MainStoreState } from "@/stores/mainStore";
 
 import { getPriceDetails, toDoubleString } from "./calc";
 

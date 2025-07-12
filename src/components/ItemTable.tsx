@@ -15,8 +15,8 @@ import {
 } from "@mantine/core";
 import { TbPencil, TbPlus, TbTrash } from "react-icons/tb";
 
-import { useMainStore } from "@/providers/MainStoreProvider";
 import { cx } from "@/lib/cx";
+import { useMainStore } from "@/stores/mainStoreHooks.js";
 
 import { createAddon } from "../models/Addon";
 import { getPriceDetails } from "../utilities/calc";
@@ -35,7 +35,7 @@ export const ItemTable: React.FC = () => {
 		<Paper withBorder>
 			<Table
 				classNames={{
-					th: "text-sm uppercase text-black/90",
+					th: "text-sm text-black/90 uppercase",
 					tfoot: cx(
 						"border-t border-[var(--table-border-color)]",
 						// fix ugly lines near rounded corners
@@ -141,7 +141,7 @@ export const ItemTable: React.FC = () => {
 							</TableTd>
 
 							<TableTd>
-								<div className="flex flex-row items-center xs:gap-2">
+								<div className="xs:gap-2 flex flex-row items-center">
 									<div className="mr-2 flex h-fit w-full flex-col gap-4">
 										<PriceLevel price={getPriceDetails(state, item).total} />
 

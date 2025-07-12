@@ -5,7 +5,7 @@ export const isItemValid = (item: Item): boolean =>
 	item.name !== "" && item.amount !== "" && item.amount != null;
 
 export const capitalize = (text: string): string =>
-	text === "" ? text : text[0]?.toLocaleUpperCase() + text.slice(1);
+	text === "" ? text : `${text[0]?.toLocaleUpperCase() ?? ""}${text.slice(1)}`;
 
 export const getItemTypeDisplayName = (item: Item): string =>
 	({

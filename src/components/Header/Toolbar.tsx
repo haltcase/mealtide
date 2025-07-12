@@ -1,5 +1,3 @@
-"use client";
-
 import { ButtonGroup } from "@mantine/core";
 import {
 	TbArrowBackUp,
@@ -9,10 +7,7 @@ import {
 	TbShare
 } from "react-icons/tb";
 
-import {
-	useMainStore,
-	useTemporalMainStore
-} from "@/providers/MainStoreProvider";
+import { useMainStore, useTemporalMainStore } from "@/stores/mainStoreHooks.js";
 import { copyUrl, share } from "@/utilities/sharing.tsx";
 
 import { ToolbarAction } from "./ToolbarAction";

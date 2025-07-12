@@ -1,5 +1,5 @@
-import type { MainStoreState } from "@/stores/mainStore";
 import type { FrontendFee, FrontendLineItem } from "@/models/Item";
+import type { MainStoreState } from "@/stores/mainStore";
 
 import type { DomNumber, ItemMap } from "../models/types";
 import { parseDomFloat } from "./helpers";

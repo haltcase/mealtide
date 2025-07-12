@@ -1,5 +1,6 @@
 import { getEslintConfig } from "@haltcase/style/eslint";
 import oxlint from "eslint-plugin-oxlint";
+import reactRefresh from "eslint-plugin-react-refresh";
 
 export default [
 	{
@@ -12,5 +13,7 @@ export default [
 		typescriptProject: "tsconfig.json"
 	}),
 
-	...oxlint.configs["flat/recommended"]
+	...oxlint.configs["flat/recommended"],
+
+	reactRefresh.configs.vite
 ];
