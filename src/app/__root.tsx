@@ -10,10 +10,6 @@ import {
 import globalStyles from "@/globals.css?url";
 import { Providers } from "@/providers/RootProviders";
 
-export const metadata = {
-	manifest: "/manifest.webmanifest"
-};
-
 const RootLayout: React.FC = () => (
 	<html lang="en" {...mantineHtmlProps}>
 		<head>
@@ -49,7 +45,7 @@ export const Route = createRootRoute({
 		links: [
 			{
 				rel: "manifest",
-				href: "/manifest.json"
+				href: "/site.webmanifest"
 			},
 			{
 				rel: "stylesheet",
