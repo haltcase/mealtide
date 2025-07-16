@@ -16,6 +16,7 @@ export default defineConfig({
 		tailwindcss(),
 		tsconfigPaths(),
 		tanstackStart({
+			target: "vercel",
 			tsr: {
 				verboseFileRoutes: false,
 				routesDirectory: "src/app"
