@@ -2,9 +2,8 @@
 	"extends": "@haltcase/style/typescript/bundler",
 	"compilerOptions": {
 		"target": "ES2018",
-		"baseUrl": "src",
 		"paths": {
-			"@/*": ["./*"]
+			"@/*": ["./src/*"]
 		}
 	},
 	"exclude": ["node_modules"],
