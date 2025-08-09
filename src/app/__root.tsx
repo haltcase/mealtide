@@ -1,4 +1,3 @@
-// TODO: Switch to a side-effect import when Start fully supports it
 import { ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
 import {
 	createRootRoute,
@@ -7,6 +6,7 @@ import {
 	Scripts
 } from "@tanstack/react-router";
 
+// TODO: Switch to a side-effect import when Start fully supports it
 import globalStyles from "@/globals.css?url";
 import { Providers } from "@/providers/RootProviders";
 
