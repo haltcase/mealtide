@@ -12,11 +12,11 @@
 /coverage
 
 # production
+/dist/
 /.nitro/
 /.output/
 /.tanstack/
 src/app/theme.css
-src/routeTree.gen.ts
 
 # misc
 .DS_Store

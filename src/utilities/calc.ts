@@ -1,5 +1,5 @@
-import type { FrontendFee, FrontendLineItem } from "@/models/Item";
-import type { MainStoreState } from "@/stores/mainStore";
+import type { FrontendFee, FrontendLineItem } from "@/models/item";
+import type { MainStoreState } from "@/stores/main-store";
 
 import type { DomNumber, ItemMap } from "../models/types";
 import { parseDomFloat } from "./helpers";
@@ -11,23 +11,17 @@ export const toDoubleString = (amount: DomNumber): string =>
 		maximumFractionDigits: 2
 	}).format(parseDomFloat(amount));
 
-export const getTotalCharges = (items: ItemMap): number => {
-	return [...items.values()].reduce(
-		(previous, current) => previous + parseDomFloat(current.amount),
-		0
-	);
-};
+export const getTotalCharges = (items: ItemMap): number =>
+	[...items.values()].reduce((previous, current) => previous + parseDomFloat(current.amount), 0);
 
-export const getChargeSplit = (
-	fees: ItemMap<FrontendFee>,
-	partyCount: number
-): number => getTotalCharges(fees) / partyCount;
+export const getChargeSplit = (fees: ItemMap<FrontendFee>, partyCount: number): number =>
+	getTotalCharges(fees) / partyCount;
 
 export const calculateProportion = (
 	state: MainStoreState,
 	item: FrontendLineItem,
 	total: number
-) => {
+): number => {
 	let otherItemsTotal = 0;
 
 	for (const [_key, value] of state.lineItems) {
@@ -35,8 +29,7 @@ export const calculateProportion = (
 			continue;
 		}
 
-		otherItemsTotal +=
-			parseDomFloat(value.amount) + getTotalCharges(value.subitems);
+		otherItemsTotal += parseDomFloat(value.amount) + getTotalCharges(value.subitems);
 	}
 
 	return total / (total + otherItemsTotal);
@@ -55,10 +48,7 @@ interface PriceDetails {
 	chargeSplit: number;
 }
 
-export const getPriceDetails = (
-	state: MainStoreState,
-	item: FrontendLineItem
-): PriceDetails => {
+export const getPriceDetails = (state: MainStoreState, item: FrontendLineItem): PriceDetails => {
 	const { fees, lineItems, taxAmount } = state;
 
 	const addonSubtotal = getTotalCharges(item.subitems);

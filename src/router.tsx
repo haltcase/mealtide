@@ -1,10 +1,10 @@
-/* eslint-disable @eslint-react/naming-convention/filename-extension */
-import { createRouter as createTanStackRouter } from "@tanstack/react-router";
+import { createRouter } from "@tanstack/react-router";
 
 import { routeTree } from "./routeTree.gen";
 
-export const createRouter = () => {
-	const router = createTanStackRouter({
+// oxlint-disable-next-line typescript/explicit-module-boundary-types
+export const getRouter = () => {
+	const router = createRouter({
 		routeTree,
 		scrollRestoration: true
 	});
@@ -14,6 +14,6 @@ export const createRouter = () => {
 
 declare module "@tanstack/react-router" {
 	interface Register {
-		router: ReturnType<typeof createRouter>;
+		router: ReturnType<typeof getRouter>;
 	}
 }

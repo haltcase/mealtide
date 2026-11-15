@@ -7,3 +7,6 @@ export const appTheme = createTheme({
 	primaryColor: "primary",
 	defaultRadius: "lg"
 });
+
+// oxlint-disable-next-line import/no-default-export -- tailwind-preset-mantine requires a default export
+export default appTheme;

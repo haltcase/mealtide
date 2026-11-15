@@ -1,6 +1,6 @@
 import { Text } from "@mantine/core";
 
-import { FirefoxShareModal } from "@/components/FirefoxShareModal";
+import { FirefoxShareModal } from "@/components/firefox-share-modal";
 
 import { toast } from "./toasts";
 
@@ -26,8 +26,8 @@ export const share = async (): Promise<void> => {
 		toast.error({
 			message: (
 				<Text>
-					Your browser doesn't support sharing content, but the URL has been
-					copied to your clipboard.
+					Your browser doesn&rsquo;t support sharing content, but the URL has been copied to your
+					clipboard.
 					<br />
 					<FirefoxShareModal label="Using Firefox?" />
 				</Text>

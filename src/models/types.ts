@@ -1,4 +1,4 @@
-import type { Item } from "./Item";
+import type { Item } from "./item";
 
 export type DomNumber = number | string | undefined;
 
