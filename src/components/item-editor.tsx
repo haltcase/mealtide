@@ -1,13 +1,15 @@
 import {
 	Autocomplete,
 	Button,
+	FocusTrapInitialFocus,
+	Modal,
 	NumberInput,
 	Popover,
 	PopoverDropdown,
 	PopoverTarget,
 	TextInput
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { useRef, useState } from "react";
 import { TbCurrencyDollar, TbTag, TbTextCaption } from "react-icons/tb";
 
@@ -49,6 +51,7 @@ export const ItemEditor = <T extends Item>({
 	const [description, setDescription] = useState(actualItem.description);
 	const [amount, setAmount] = useState(actualItem.amount);
 	const [isOpen, { open, close }] = useDisclosure();
+	const useModal = useMediaQuery("(pointer: coarse)");
 
 	const isChanged =
 		name !== actualItem.name ||
@@ -75,6 +78,96 @@ export const ItemEditor = <T extends Item>({
 
 	const amountInputRef = useRef<HTMLInputElement | null>(null);
 
+	const fields = (
+		<div className="flex flex-col gap-2">
+			<Autocomplete
+				className="text-foreground max-w-full"
+				type="text"
+				label="Name"
+				placeholder={placeholder}
+				value={name}
+				data-autofocus={!useModal || undefined}
+				leftSection={<TbTag className="text-primary" />}
+				data={[{ group: "Choose one or enter your own", items: suggestions ?? [] }]}
+				autoComplete="off"
+				onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) =>
+					event.key === "Enter" && handleSubmit()
+				}
+				onChange={(value) => {
+					setName(capitalize(value));
+				}}
+				onOptionSubmit={() => {
+					amountInputRef.current?.focus();
+				}}
+				comboboxProps={{ radius: "md", withinPortal: false }}
+			/>
+
+			{actualItem.type === "LineItem" ? (
+				<TextInput
+					label="Description"
+					placeholder="What did they order?"
+					value={description}
+					leftSection={<TbTextCaption className="text-primary" />}
+					onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) =>
+						event.key === "Enter" && handleSubmit()
+					}
+					onChange={(event) => setDescription(capitalize(event.currentTarget.value))}
+				/>
+			) : null}
+
+			<NumberInput
+				ref={amountInputRef}
+				className="text-foreground max-w-full"
+				type="text"
+				label="Amount"
+				description={actualItem.type === "Fee" ? "Use negative for discounts" : undefined}
+				descriptionProps={{
+					className: "text-sm"
+				}}
+				leftSection={<TbCurrencyDollar className="text-primary" />}
+				width="100%"
+				placeholder="10.99"
+				inputMode="decimal"
+				pattern="^(0|[1-9]\d*)?(\.\d+)?(?<=\d)$"
+				min={actualItem.type === "Fee" ? undefined : 0}
+				step={0.1}
+				decimalScale={2}
+				fixedDecimalScale
+				value={amount}
+				onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) =>
+					event.key === "Enter" && handleSubmit()
+				}
+				onChange={setAmount}
+			/>
+
+			<div className="flex flex-row justify-end gap-2 py-4">
+				<Button size="sm" onClick={close}>
+					Cancel
+				</Button>
+
+				<Button color="success" size="sm" disabled={!canSubmit} onClick={handleSubmit}>
+					{actionType}
+				</Button>
+			</div>
+		</div>
+	);
+
+	if (useModal) {
+		return (
+			<>
+				{renderTrigger(openEditor)}
+				<Modal
+					opened={isOpen}
+					onClose={close}
+					title={actionDescription}
+					closeButtonProps={{ "aria-label": "Close editor" }}>
+					<FocusTrapInitialFocus />
+					{fields}
+				</Modal>
+			</>
+		);
+	}
+
 	return (
 		<Popover
 			classNames={{
@@ -83,6 +176,8 @@ export const ItemEditor = <T extends Item>({
 					"from-primary-100 to-secondary-200 rounded-lg border-0 bg-linear-to-br px-4 shadow-lg"
 			}}
 			position="bottom-start"
+			trapFocus
+			returnFocus
 			opened={isOpen}
 			onDismiss={close}>
 			<PopoverTarget>{renderTrigger(openEditor)}</PopoverTarget>
@@ -90,77 +185,7 @@ export const ItemEditor = <T extends Item>({
 			<PopoverDropdown>
 				<div className="flex max-w-[75vw] flex-col gap-2">
 					<p className="pt-4 font-bold">{actionDescription}</p>
-
-					<Autocomplete
-						className="text-foreground max-w-full"
-						type="text"
-						label="Name"
-						placeholder={placeholder}
-						value={name}
-						// oxlint-disable-next-line no-autofocus
-						autoFocus
-						leftSection={<TbTag className="text-primary" />}
-						data={[{ group: "Choose one or enter your own", items: suggestions ?? [] }]}
-						autoComplete="off"
-						onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) =>
-							event.key === "Enter" && handleSubmit()
-						}
-						onChange={(value) => {
-							setName(capitalize(value));
-						}}
-						onOptionSubmit={() => {
-							amountInputRef.current?.focus();
-						}}
-						comboboxProps={{ radius: "md", withinPortal: false }}
-					/>
-
-					{actualItem.type === "LineItem" ? (
-						<TextInput
-							label="Description"
-							placeholder="What did they order?"
-							value={description}
-							leftSection={<TbTextCaption className="text-primary" />}
-							onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) =>
-								event.key === "Enter" && handleSubmit()
-							}
-							onChange={(event) => setDescription(capitalize(event.currentTarget.value))}
-						/>
-					) : null}
-
-					<NumberInput
-						ref={amountInputRef}
-						className="text-foreground max-w-full"
-						type="text"
-						label="Amount"
-						description={actualItem.type === "Fee" ? "Use negative for discounts" : undefined}
-						descriptionProps={{
-							className: "text-sm"
-						}}
-						leftSection={<TbCurrencyDollar className="text-primary" />}
-						width="100%"
-						placeholder="10.99"
-						inputMode="decimal"
-						pattern="^(0|[1-9]\d*)?(\.\d+)?(?<=\d)$"
-						min={actualItem.type === "Fee" ? undefined : 0}
-						step={0.1}
-						decimalScale={2}
-						fixedDecimalScale
-						value={amount}
-						onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) =>
-							event.key === "Enter" && handleSubmit()
-						}
-						onChange={setAmount}
-					/>
-
-					<div className="flex flex-row justify-end gap-2 py-4">
-						<Button size="sm" onClick={close}>
-							Cancel
-						</Button>
-
-						<Button color="success" size="sm" disabled={!canSubmit} onClick={handleSubmit}>
-							{actionType}
-						</Button>
-					</div>
+					{fields}
 				</div>
 			</PopoverDropdown>
 		</Popover>
