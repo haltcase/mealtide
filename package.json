@@ -9,7 +9,7 @@
 	"type": "module",
 	"scripts": {
 		"build": "vp build",
-		"check": "vp lint",
+		"check": "vp check",
 		"dev": "vp dev",
 		"fmt": "pnpm format",
 		"format": "vp check --fix",
