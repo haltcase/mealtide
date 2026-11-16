@@ -13,7 +13,7 @@
 		"dev": "vp dev",
 		"fmt": "pnpm format",
 		"format": "vp check --fix",
-		"prepare": "vp config",
+		"prepare": "vp config && vp format AGENTS.md",
 		"start": "node .output/server/index.mjs",
 		"types": "vp check --no-fmt --no-lint"
 	},
