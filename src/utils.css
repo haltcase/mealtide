@@ -1,0 +1,9 @@
+/* Resolution utilities for high DPI displays */
+@custom-variant dpr-1 (@media (min-resolution: 1dppx));
+@custom-variant dpr-2 (@media (min-resolution: 2dppx));
+@custom-variant dpr-3 (@media (min-resolution: 3dppx));
+@custom-variant dpr-4 (@media (min-resolution: 4dppx));
+@custom-variant max-dpr-1 (@media (max-resolution: 1dppx));
+@custom-variant max-dpr-2 (@media (max-resolution: 2dppx));
+@custom-variant max-dpr-3 (@media (max-resolution: 3dppx));
+@custom-variant max-dpr-4 (@media (max-resolution: 4dppx));

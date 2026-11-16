@@ -1,0 +1,33 @@
+@import "./theme.css";
+@import "@mantine/notifications/styles.layer.css";
+
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/lora";
+@import "@fontsource-variable/fira-code";
+
+@theme {
+	--font-sans: "Inter", sans-serif;
+	--font-serif: "Lora", serif;
+	--font-monospace: "Fira Code", monospace;
+
+	--color-primary: var(--mantine-color-primary-6);
+	--color-secondary: var(--mantine-color-secondary-8);
+	--color-success: var(--mantine-color-success-6);
+	--color-warning: var(--mantine-color-warning-4);
+	--color-danger: var(--mantine-color-danger-7);
+}
+
+@layer base {
+	body {
+		font-feature-settings:
+			"rlig" 1,
+			"calt" 1;
+	}
+}
+
+@layer mantine {
+	.mantine-InputWrapper-label,
+	.mantine-InputWrapper-description {
+		font-size: inherit;
+	}
+}

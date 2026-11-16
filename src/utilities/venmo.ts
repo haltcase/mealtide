@@ -1,14 +1,11 @@
-import type { MainStoreState } from "@/app/stores/mainStore";
-import type { FrontendLineItem } from "@/models/Item";
+import type { FrontendLineItem } from "@/models/item";
+import type { MainStoreState } from "@/stores/main-store";
 
 import { getPriceDetails, toDoubleString } from "./calc";
 
 const baseUrl = "https://venmo.com";
 
-export const getPaymentUrl = (
-	state: MainStoreState,
-	item: FrontendLineItem
-): string => {
+export const getPaymentUrl = (state: MainStoreState, item: FrontendLineItem): string => {
 	const { orderTitle, venmoUsername } = state;
 
 	if (!venmoUsername) {
@@ -25,12 +22,9 @@ export const getPaymentUrl = (
 
 	let orderNote = "Order for ";
 
-	orderNote +=
-		orderTitle.trim() === "" ? new Date().toLocaleDateString() : orderTitle;
+	orderNote += orderTitle.trim() === "" ? new Date().toLocaleDateString() : orderTitle;
 
-	orderNote += `: $${toDoubleString(subtotal)} plus $${toDoubleString(
-		tax
-	)} in tax`;
+	orderNote += `: $${toDoubleString(subtotal)} plus $${toDoubleString(tax)} in tax`;
 
 	if (chargeSplit > 0) {
 		orderNote += `, $${toDoubleString(chargeSplit)} in fees`;

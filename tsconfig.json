@@ -1,25 +1,10 @@
 {
-	"extends": "@haltcase/style/typescript/next",
+	"extends": "@haltcase/style/typescript/bundler",
 	"compilerOptions": {
-		"allowImportingTsExtensions": true,
-		"moduleResolution": "bundler",
 		"target": "ES2018",
-		"baseUrl": "src",
 		"paths": {
-			"@/*": ["./*"]
+			"@/*": ["./src/*"]
 		}
 	},
-	"exclude": ["node_modules"],
-	"include": [
-		"**/*.ts",
-		"**/*.tsx",
-		"**/*.js",
-		"**/*.jsx",
-		"**/*.mjs",
-		".*.js",
-		".eslintrc.cjs",
-		"next.config.ts",
-		"postcss.config.js",
-		".next/types/**/*.ts"
-	]
+	"include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "**/*.mjs", ".*.js"]
 }

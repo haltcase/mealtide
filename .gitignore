@@ -11,12 +11,12 @@
 # testing
 /coverage
 
-# next.js
-/.next/
-/out/
-
 # production
-/build
+/dist/
+/.nitro/
+/.output/
+/.tanstack/
+src/app/theme.css
 
 # misc
 .DS_Store

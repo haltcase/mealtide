@@ -1,11 +1,11 @@
-import type { Item } from "../models/Item";
+import type { Item } from "../models/item";
 import type { DomNumber } from "../models/types";
 
-export const isItemValid = (item: Item): boolean =>
+export const isItemValid = (item: Pick<Item, "name" | "amount">): boolean =>
 	item.name !== "" && item.amount !== "" && item.amount != null;
 
 export const capitalize = (text: string): string =>
-	text === "" ? text : text[0].toLocaleUpperCase() + text.slice(1);
+	text === "" ? text : `${text[0]?.toLocaleUpperCase() ?? ""}${text.slice(1)}`;
 
 export const getItemTypeDisplayName = (item: Item): string =>
 	({
@@ -15,8 +15,8 @@ export const getItemTypeDisplayName = (item: Item): string =>
 	})[item.type];
 
 export const parseDomFloat = (amount: DomNumber): number => {
-	const value =
-		typeof amount === "string" ? Number.parseFloat(amount) : (amount ?? 0);
+	// oxlint-disable-next-line unicorn/prefer-number-coercion -- Keep accepting numeric prefixes in amounts from legacy saves.
+	const value = typeof amount === "string" ? Number.parseFloat(amount) : (amount ?? 0);
 
 	return Number.isNaN(value) ? 0 : value;
 };
@@ -28,5 +28,6 @@ export const isPlainObject = (value: unknown): boolean => {
 	}
 
 	const prototype = Object.getPrototypeOf(value) as unknown;
+
 	return prototype === null || prototype === Object.prototype;
 };

@@ -1,15 +1,6 @@
-import type {
-	DefaultMantineColor,
-	MantineColorsTuple,
-	MantineThemeOverride
-} from "@mantine/core";
+import type { DefaultMantineColor, MantineColorsTuple, MantineThemeOverride } from "@mantine/core";
 
-export type CustomColors =
-	| "primary"
-	| "secondary"
-	| "success"
-	| "warning"
-	| "danger";
+export type CustomColors = "primary" | "secondary" | "success" | "warning" | "danger";
 
 type ExtendedCustomColors = CustomColors | DefaultMantineColor;
 
